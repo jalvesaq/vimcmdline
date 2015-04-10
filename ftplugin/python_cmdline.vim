@@ -8,6 +8,8 @@ let b:vimcmdline_nl = "\n"
 let b:vimcmdline_app = "python"
 let b:vimcmdline_quit_cmd = "quit()"
 let b:vimcmdline_source_fun = function("PythonSourceLines")
+let b:vimcmdline_send_empty = 1
+
 nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
 
 exe 'autocmd VimLeave * call delete("' . g:vimcmdline_tmp_dir . '/lines.py")'

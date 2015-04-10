@@ -52,6 +52,9 @@ endif
 if !exists("g;vimcmdline_tmp_dir")
     let g:vimcmdline_tmp_dir = "/tmp/vimcmdline_" . $USER
 endif
+if !exists("g:vimcmdline_outhl")
+    let g:vimcmdline_outhl = 1
+endif
 
 " Internal variable
 let s:vimcmdline_job = 0
@@ -97,7 +100,10 @@ function VimCmdLineStart_Nvim(app)
     let s:vimcmdline_bufname = bufname("%")
     let b:script_buffer = edbuf
     if g:vimcmdline_esc_term
-        tnoremap <buffer> <Esc> :stopinsert
+        tnoremap <buffer> <Esc> <C-\><C-n>
+    endif
+    if g:vimcmdline_outhl
+        exe 'runtime syntax/cmdlineoutput_' . a:app . '.vim'
     endif
     exe "sbuffer " . edbuf
     stopinsert
@@ -134,7 +140,7 @@ endfunction
 " Send current line to the interpreter and go down to the next non empty line
 function VimCmdLineSendLine()
     let line = getline(".")
-    if strlen(line) == 0
+    if strlen(line) == 0 && b:vimcmdline_send_empty == 0
         call s:GoLineDown()
         return
     endif

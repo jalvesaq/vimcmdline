@@ -8,6 +8,8 @@ let b:vimcmdline_nl = "\n"
 let b:vimcmdline_app = "ghci"
 let b:vimcmdline_quit_cmd = ":quit"
 let b:vimcmdline_source_fun = function("HaskellSourceLines")
+let b:vimcmdline_send_empty = 0
+
 nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
 
 exe 'autocmd VimLeave * call delete("' . g:vimcmdline_tmp_dir . '/lines.hs")'
