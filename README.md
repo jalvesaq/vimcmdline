@@ -9,7 +9,7 @@ or *~/.nvim* directory, or use a plugin manager.
 ## Usage 
 
 If you are editing one of the supported file types (julia, lisp, ruby or
-haskell), in Normal mode do:
+haskell, sh, matlab), in Normal mode do:
 
   - `<LocalLeader>s` to start the interpreter.
 
