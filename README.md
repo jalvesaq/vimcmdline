@@ -1,5 +1,9 @@
 # vimcmdline: Send lines to interpreter
 
+Nvim running *octave*:
+
+![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
+
 ## How to install
 
 Copy the directories *ftplugin* and *plugin* and their files to your *~/.nvim*
