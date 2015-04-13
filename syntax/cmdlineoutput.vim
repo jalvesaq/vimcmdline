@@ -48,24 +48,24 @@ syn match cmdlineDate "[0-9][0-9][-/][0-9][0-9][-/][0-9][0-9][0-9][-0-9]"
 syn match cmdlineDate "[0-9][0-9]:[0-9][0-9]:[0-9][-0-9]"
 
 " Input
-if exists("b:vimcmdline_prompt")
-    exe 'syn match cmdlineInput ' . b:vimcmdline_prompt
+if exists("b:cmdline_prompt")
+    exe 'syn match cmdlineInput ' . b:cmdline_prompt
 endif
-if exists("b:vimcmdline_continue")
-    exe 'syn match cmdlineInput ' . b:vimcmdline_continue
+if exists("b:cmdline_continue")
+    exe 'syn match cmdlineInput ' . b:cmdline_continue
 endif
 
 " Errors and warnings
-if exists("b:vimcmdline_error")
-    exe 'syn match cmdlineError ' . b:vimcmdline_error
+if exists("b:cmdline_error")
+    exe 'syn match cmdlineError ' . b:cmdline_error
 endif
-if exists("b:vimcmdline_warn")
-    exe 'syn match cmdlineWarn ' . b:vimcmdline_warn
+if exists("b:cmdline_warn")
+    exe 'syn match cmdlineWarn ' . b:cmdline_warn
 endif
 
 hi def link cmdlineInput	Comment
 
-if exists("g:vimcmdline_follow_colorscheme") && g:vimcmdline_follow_colorscheme
+if exists("g:cmdline_follow_colorscheme") && g:cmdline_follow_colorscheme
     " Default when following :colorscheme
     hi def link cmdlineNormal	Normal
     hi def link cmdlineNumber	Number

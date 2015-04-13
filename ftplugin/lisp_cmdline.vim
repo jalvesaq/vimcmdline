@@ -1,15 +1,15 @@
 
 function! LispSourceLines(lines)
-    call writefile(a:lines, g:vimcmdline_tmp_dir . "/lines.lsp")
-    call VimCmdLineSendCmd('(load "' . g:vimcmdline_tmp_dir . '/lines.lsp")')
+    call writefile(a:lines, g:cmdline_tmp_dir . "/lines.lsp")
+    call VimCmdLineSendCmd('(load "' . g:cmdline_tmp_dir . '/lines.lsp")')
 endfunction
 
-let b:vimcmdline_nl = "\n"
-let b:vimcmdline_app = "clisp"
-let b:vimcmdline_quit_cmd = "(quit)"
-let b:vimcmdline_source_fun = function("LispSourceLines")
-let b:vimcmdline_send_empty = 0
+let b:cmdline_nl = "\n"
+let b:cmdline_app = "clisp"
+let b:cmdline_quit_cmd = "(quit)"
+let b:cmdline_source_fun = function("LispSourceLines")
+let b:cmdline_send_empty = 0
 
 nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
 
-exe 'autocmd VimLeave * call delete("' . g:vimcmdline_tmp_dir . '/lines.lsp")'
+exe 'autocmd VimLeave * call delete("' . g:cmdline_tmp_dir . '/lines.lsp")'

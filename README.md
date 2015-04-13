@@ -1,13 +1,14 @@
 # vimcmdline: Send lines to interpreter
 
-Nvim running *octave*:
+[Neovim] running *octave*:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
 ## How to install
 
-Copy the directories *ftplugin* and *plugin* and their files to your *~/.nvim*
-directory, or use a plugin manager.
+Copy the directories *ftplugin*, *plugin* and *syntax* and their files to your
+*~/.nvim* directory, or use a plugin manager like [Vundle], [Pathogen],
+[Vim-Plug], [Neobundle], or other.
 
 ## Usage 
 
@@ -31,18 +32,18 @@ For languages that can source chunks of code, in Visual mode, press:
 Below are examples of how to set the options in your *nvimrc*:
 
 ```vim
-let vimcmdline_vsplit = 1        " Split the window vertically
-let vimcmdline_esc_term = 1      " Remap <Esc> to :stopinsert in Neovim terminal
-let vimcmdline_in_buffer = 0     " Start the interpreter in a Neovim buffer
-let vimcmdline_term_height = 15  " Initial height of interpreter window or pane
-let vimcmdline_term_width = 80   " Initial width of interpreter window or pane
-let vimcmdline_tmp_dir = '/tmp'  " Temporary directory to save files
-let vimcmdline_outhl = 1         " Syntax highlight the output
+let cmdline_vsplit = 1        " Split the window vertically
+let cmdline_esc_term = 1      " Remap <Esc> to :stopinsert in Neovim terminal
+let cmdline_in_buffer = 0     " Start the interpreter in a Neovim buffer
+let cmdline_term_height = 15  " Initial height of interpreter window or pane
+let cmdline_term_width = 80   " Initial width of interpreter window or pane
+let cmdline_tmp_dir = '/tmp'  " Temporary directory to save files
+let cmdline_outhl = 1         " Syntax highlight the output
 ```
 
 You can also set the foreground colors of the interpreter output in your *nvimrc*.
 The example below is for a terminal emulator that supports 256 colors (see in
-Vim `:h highlight-ctermfg`:
+Vim `:h highlight-ctermfg`):
 
 ```vim
 if &t_Co == 256
@@ -77,3 +78,9 @@ put in your *nvimrc*:
 ```vim
 let cmdline_follow_colorscheme = 1
 ```
+
+[Neovim]: https://github.com/neovim/neovim
+[Vundle]: https://github.com/gmarik/Vundle.vim
+[Pathogen]: https://github.com/tpope/vim-pathogen
+[Vim-Plug]: https://github.com/junegunn/vim-plug
+[Neobundle]: https://github.com/Shougo/neobundle.vim

@@ -15,49 +15,50 @@
 " Author: Jakson Alves de Aquino <jalvesaq@gmail.com>
 "==========================================================================
 
-if exists("g:did_vimcmdline")
+if exists("g:did_cmdline")
     finish
 endif
-let g:did_vimcmdline = 1
+let g:did_cmdline = 1
 
 " Set option
 if has("nvim")
-    if !exists("g:vimcmdline_in_buffer")
-        let g:vimcmdline_in_buffer = 1
+    if !exists("g:cmdline_in_buffer")
+        let g:cmdline_in_buffer = 1
     endif
 else
-    let g:vimcmdline_in_buffer = 0
+    let g:cmdline_in_buffer = 0
 endif
 
 " Check if Tmux is running
-if !g:vimcmdline_in_buffer
+if !g:cmdline_in_buffer
     if $TMUX == ""
         finish
     endif
 endif
 
 " Set other options
-if !exists("g:vimcmdline_vsplit")
-    let g:vimcmdline_vsplit = 0
+if !exists("g:cmdline_vsplit")
+    let g:cmdline_vsplit = 0
 endif
-if !exists("g:vimcmdline_esc_term")
-    let g:vimcmdline_esc_term = 1
+if !exists("g:cmdline_esc_term")
+    let g:cmdline_esc_term = 1
 endif
-if !exists("g:vimcmdline_term_width")
-    let g:vimcmdline_term_width = 40
+if !exists("g:cmdline_term_width")
+    let g:cmdline_term_width = 40
 endif
-if !exists("g:vimcmdline_term_height")
-    let g:vimcmdline_term_height = 15
+if !exists("g:cmdline_term_height")
+    let g:cmdline_term_height = 15
 endif
-if !exists("g;vimcmdline_tmp_dir")
-    let g:vimcmdline_tmp_dir = "/tmp/vimcmdline_" . $USER
+if !exists("g;cmdline_tmp_dir")
+    let g:cmdline_tmp_dir = "/tmp/cmdline_" . $USER
 endif
-if !exists("g:vimcmdline_outhl")
-    let g:vimcmdline_outhl = 1
+if !exists("g:cmdline_outhl")
+    let g:cmdline_outhl = 1
 endif
 
-" Internal variable
-let s:vimcmdline_job = 0
+" Internal variables
+let s:cmdline_job = 0
+let s:cmdline_app_pane = ''
 
 " Skip empty lines
 function s:GoLineDown()
@@ -74,35 +75,69 @@ function s:GoLineDown()
     endwhile
 endfunction
 
+" Adapted from screen plugin:
+function GetTmuxActivePane()
+  let line = system("tmux list-panes | grep \'(active)$'")
+  let paneid = matchstr(line, '\v\%\d+ \(active\)')
+  if !empty(paneid)
+    return matchstr(paneid, '\v^\%\d+')
+  else
+    return matchstr(line, '\v^\d+')
+  endif
+endfunction
+
 " Run the interpreter in a Tmux panel
 function VimCmdLineStart_Tmux(app)
-    echomsg "Support for Tmux not implemented yet"
+    let g:cmdline_vim_pane = GetTmuxActivePane()
+    let tcmd = "tmux split-window "
+    if g:cmdline_vsplit
+        if g:cmdline_term_width == -1
+            let tcmd .= "-h"
+        else
+            let tcmd .= "-h -l " . g:cmdline_term_width
+        endif
+    else
+        let tcmd .= "-l " . g:cmdline_term_height
+    endif
+    let tcmd .= " " . a:app
+    let slog = system(tcmd)
+    if v:shell_error
+        exe 'echoerr ' . slog
+        return
+    endif
+    let s:cmdline_app_pane = GetTmuxActivePane()
+    let slog = system("tmux select-pane -t " . g:cmdline_vim_pane)
+    if v:shell_error
+        exe 'echoerr ' . slog
+        return
+    endif
+    " call VimCmdLineSendCmd(a:app)
 endfunction
 
 " Run the interpreter in a Neovim terminal buffer
 function VimCmdLineStart_Nvim(app)
     let edbuf = bufname("%")
     set switchbuf=useopen
-    if g:vimcmdline_vsplit
-        if g:vimcmdline_term_width > 16 && g:vimcmdline_term_width < (winwidth(0) - 16)
-            silent exe "belowright " . g:vimcmdline_term_width . "vnew"
+    if g:cmdline_vsplit
+        if g:cmdline_term_width > 16 && g:cmdline_term_width < (winwidth(0) - 16)
+            silent exe "belowright " . g:cmdline_term_width . "vnew"
         else
             silent belowright vnew
         endif
     else
-        if g:vimcmdline_term_height > 6 && g:vimcmdline_term_height < (winheight(0) - 6)
-            silent exe "belowright " . g:vimcmdline_term_height . "new"
+        if g:cmdline_term_height > 6 && g:cmdline_term_height < (winheight(0) - 6)
+            silent exe "belowright " . g:cmdline_term_height . "new"
         else
             silent belowright new
         endif
     endif
-    let s:vimcmdline_job = termopen(a:app, {'on_exit': function('s:VimCmdLineJobExit')})
-    let s:vimcmdline_bufname = bufname("%")
+    let s:cmdline_job = termopen(a:app, {'on_exit': function('s:VimCmdLineJobExit')})
+    let s:cmdline_bufname = bufname("%")
     let b:script_buffer = edbuf
-    if g:vimcmdline_esc_term
+    if g:cmdline_esc_term
         tnoremap <buffer> <Esc> <C-\><C-n>
     endif
-    if g:vimcmdline_outhl
+    if g:cmdline_outhl
         exe 'runtime syntax/cmdlineoutput_' . a:app . '.vim'
     endif
     exe "sbuffer " . edbuf
@@ -111,36 +146,46 @@ endfunction
 
 " Common procedure to start the interpreter
 function VimCmdLineStartApp()
-    if !exists("b:vimcmdline_app")
+    if !exists("b:cmdline_app")
         echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
         return
     endif
     nmap <silent><buffer> <Space> :call VimCmdLineSendLine()<CR>
-    if exists("b:vimcmdline_source_fun")
-        vmap <silent><buffer> <Space> <Esc>:call b:vimcmdline_source_fun(getline("'<", "'>"))<CR>
-        nmap <silent><buffer> <LocalLeader>f :call b:vimcmdline_source_fun(getline(1, "$"))<CR>
+    if exists("b:cmdline_source_fun")
+        vmap <silent><buffer> <Space> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
+        nmap <silent><buffer> <LocalLeader>f :call b:cmdline_source_fun(getline(1, "$"))<CR>
     endif
-    if exists("b:vimcmdline_quit_cmd")
+    if exists("b:cmdline_quit_cmd")
         nmap <silent><buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
     endif
-    if g:vimcmdline_in_buffer
-        call VimCmdLineStart_Nvim(b:vimcmdline_app)
+    if g:cmdline_in_buffer
+        call VimCmdLineStart_Nvim(b:cmdline_app)
     else
-        call VimCmdLineStart_Tmux(b:vimcmdline_app)
+        call VimCmdLineStart_Tmux(b:cmdline_app)
     endif
 endfunction
 
 " Send a single line to the interpreter
 function VimCmdLineSendCmd(...)
-    if s:vimcmdline_job
-        call jobsend(s:vimcmdline_job, a:1 . b:vimcmdline_nl)
+    if s:cmdline_job
+        call jobsend(s:cmdline_job, a:1 . b:cmdline_nl)
+    elseif s:cmdline_app_pane != ''
+        let str = substitute(a:1, "'", "'\\\\''", "g")
+        let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
+        let slog = system(scmd)
+        if v:shell_error
+            let slog = substitute(rlog, "\n", " ", "g")
+            let slog = substitute(rlog, "\r", " ", "g")
+            exe 'echoerr ' . slog
+            let s:cmdline_app_pane = ''
+        endif
     endif
 endfunction
 
 " Send current line to the interpreter and go down to the next non empty line
 function VimCmdLineSendLine()
     let line = getline(".")
-    if strlen(line) == 0 && b:vimcmdline_send_empty == 0
+    if strlen(line) == 0 && b:cmdline_send_empty == 0
         call s:GoLineDown()
         return
     endif
@@ -150,10 +195,12 @@ endfunction
 
 " Quit the interpreter
 function VimCmdLineQuit()
-    if exists("b:vimcmdline_quit_cmd")
-        call VimCmdLineSendCmd(b:vimcmdline_quit_cmd)
-        exe "sb " . s:vimcmdline_bufname
-        startinsert
+    if exists("b:cmdline_quit_cmd")
+        call VimCmdLineSendCmd(b:cmdline_quit_cmd)
+        if exists("s:cmdline_bufname")
+            exe "sb " . s:cmdline_bufname
+            startinsert
+        endif
     else
         echomsg 'Quit command not defined for file of type "' . &filetype . '".'
     endif
@@ -161,12 +208,12 @@ endfunction
 
 " Register that the job no longer exists
 function s:VimCmdLineJobExit(job_id, data)
-    if a:job_id == s:vimcmdline_job
-        let s:vimcmdline_job = 0
+    if a:job_id == s:cmdline_job
+        let s:cmdline_job = 0
     endif
 endfunction
 
-if !isdirectory(g:vimcmdline_tmp_dir)
-    call mkdir(g:vimcmdline_tmp_dir)
+if !isdirectory(g:cmdline_tmp_dir)
+    call mkdir(g:cmdline_tmp_dir)
 endif
 
