@@ -1,19 +1,21 @@
 # vimcmdline: Send lines to interpreter
 
-[Neovim] running *octave*:
+This plugin sends lines from the text editor [Vim] or [Neovim] to a command
+line interpreter. Supported file types are haskell, julia, lisp, matlab,
+python, ruby and sh. Below is an screenshot of *octave* running in Neovim
+built-in terminal:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
 ## How to install
 
 Copy the directories *ftplugin*, *plugin* and *syntax* and their files to your
-*~/.nvim* directory, or use a plugin manager like [Vundle], [Pathogen],
-[Vim-Plug], [Neobundle], or other.
+*~/.vim* or *~/.nvim* directory, or use a plugin manager like [Vundle],
+[Pathogen], [Vim-Plug], [Neobundle], or other.
 
 ## Usage 
 
-If you are editing one of the supported file types (haskell, julia, lisp,
-matlab, python, ruby or sh), in Normal mode do:
+If you are editing one of the supported file types, in Normal mode do:
 
   - `<LocalLeader>s` to start the interpreter.
 
@@ -21,15 +23,23 @@ matlab, python, ruby or sh), in Normal mode do:
 
   - `<LocalLeader>q` to send the quit command to the interpreter.
 
-For languages that can source chunks of code, in Visual mode, press:
+For languages that can source chunks of code:
 
-  - `<Space>` to send a selection of text to the interpreter
+  - In Visual mode, press:
 
-  - `<LocalLeader>f` to send the entire file to the interpreter.
+    - `<Space>` to send a selection of text to the interpreter.
+
+  - And, in Normal mode, press:
+
+    - `<LocalLeader>p` to send from the line to the end of paragraph.
+
+    - `<LocalLeader>b` to send block of code between two closest marks.
+
+    - `<LocalLeader>f` to send the entire file to the interpreter.
 
 ## Options
 
-Below are examples of how to set the options in your *nvimrc*:
+Below are examples of how to set the options in your *vimrc* or *nvimrc*:
 
 ```vim
 let cmdline_vsplit = 1        " Split the window vertically
@@ -41,9 +51,10 @@ let cmdline_tmp_dir = '/tmp'  " Temporary directory to save files
 let cmdline_outhl = 1         " Syntax highlight the output
 ```
 
-You can also set the foreground colors of the interpreter output in your *nvimrc*.
-The example below is for a terminal emulator that supports 256 colors (see in
-Vim `:h highlight-ctermfg`):
+If you are using Neovim, you can use its syntax highlight capabilities to
+colorize the interpreter output, and you can customize the colors in your
+*nvimrc*. The example of customization below is for a terminal emulator that
+supports 256 colors (see in Neovim `:h highlight-ctermfg`):
 
 ```vim
 if &t_Co == 256
@@ -79,6 +90,7 @@ put in your *nvimrc*:
 let cmdline_follow_colorscheme = 1
 ```
 
+[Vim]: http://www.vim.org
 [Neovim]: https://github.com/neovim/neovim
 [Vundle]: https://github.com/gmarik/Vundle.vim
 [Pathogen]: https://github.com/tpope/vim-pathogen

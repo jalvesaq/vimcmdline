@@ -154,6 +154,8 @@ function VimCmdLineStartApp()
     if exists("b:cmdline_source_fun")
         vmap <silent><buffer> <Space> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
         nmap <silent><buffer> <LocalLeader>f :call b:cmdline_source_fun(getline(1, "$"))<CR>
+        nmap <silent><buffer> <LocalLeader>p :call VimCmdLineSendParagraph()<CR>
+        nmap <silent><buffer> <LocalLeader>b :call VimCmdLineSendMBlock()<CR>
     endif
     if exists("b:cmdline_quit_cmd")
         nmap <silent><buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
@@ -191,6 +193,59 @@ function VimCmdLineSendLine()
     endif
     call VimCmdLineSendCmd(line)
     call s:GoLineDown()
+endfunction
+
+function VimCmdLineSendParagraph()
+    let i = line(".")
+    let c = col(".")
+    let max = line("$")
+    let j = i
+    let gotempty = 0
+    while j < max
+        let j += 1
+        let line = getline(j)
+        if line =~ '^\s*$'
+            break
+        endif
+    endwhile
+    let lines = getline(i, j)
+    call b:cmdline_source_fun(lines)
+    if j < max
+        call cursor(j, 1)
+    else
+        call cursor(max, 1)
+    endif
+endfunction
+
+let s:all_marks = "abcdefghijklmnopqrstuvwxyz"
+
+function VimCmdLineSendMBlock()
+    let curline = line(".")
+    let lineA = 1
+    let lineB = line("$")
+    let maxmarks = strlen(s:all_marks)
+    let n = 0
+    while n < maxmarks
+        let c = strpart(s:all_marks, n, 1)
+        let lnum = line("'" . c)
+        if lnum != 0
+            if lnum <= curline && lnum > lineA
+                let lineA = lnum
+            elseif lnum > curline && lnum < lineB
+                let lineB = lnum
+            endif
+        endif
+        let n = n + 1
+    endwhile
+    if lineA == 1 && lineB == (line("$"))
+        echo "The file has no mark!"
+        return
+    endif
+    if lineB < line("$")
+        let lineB -= 1
+    endif
+    let lines = getline(lineA, lineB)
+    call b:cmdline_source_fun(lines)
 endfunction
 
 " Quit the interpreter
