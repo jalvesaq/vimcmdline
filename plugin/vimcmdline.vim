@@ -160,6 +160,11 @@ function VimCmdLineStartApp()
     if exists("b:cmdline_quit_cmd")
         nmap <silent><buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
     endif
+
+    if !isdirectory(g:cmdline_tmp_dir)
+        call mkdir(g:cmdline_tmp_dir)
+    endif
+
     if g:cmdline_in_buffer
         call VimCmdLineStart_Nvim(b:cmdline_app)
     else
@@ -267,8 +272,4 @@ function s:VimCmdLineJobExit(job_id, data)
         let s:cmdline_job = 0
     endif
 endfunction
-
-if !isdirectory(g:cmdline_tmp_dir)
-    call mkdir(g:cmdline_tmp_dir)
-endif
 
