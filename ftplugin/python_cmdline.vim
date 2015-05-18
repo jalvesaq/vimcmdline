@@ -12,4 +12,4 @@ let b:cmdline_send_empty = 1
 
 nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
 
-exe 'autocmd VimLeave * call delete("' . g:cmdline_tmp_dir . '/lines.py")'
+exe 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.py")'
