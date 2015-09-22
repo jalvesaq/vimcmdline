@@ -2,8 +2,8 @@
 
 This plugin sends lines from the text editor [Vim] or [Neovim] to a command
 line interpreter. Supported file types are haskell, julia, lisp, matlab,
-python, ruby and sh. Below is an screenshot of *octave* running in Neovim
-built-in terminal:
+prolog, python, ruby and sh. Below is an screenshot of *octave* running in
+Neovim built-in terminal:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
@@ -13,7 +13,7 @@ Copy the directories *ftplugin*, *plugin* and *syntax* and their files to your
 *~/.vim* or *~/.nvim* directory, or use a plugin manager like [Vundle],
 [Pathogen], [Vim-Plug], [Neobundle], or other.
 
-## Usage 
+## Usage
 
 If you are editing one of the supported file types, in Normal mode do:
 
