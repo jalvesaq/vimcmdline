@@ -1,5 +1,5 @@
 function! PythonSourceLines(lines)
-    call VimCmdLineSendCmd(join(add(a:lines, ''), "\n"))
+    call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
 endfunction
 
 let b:cmdline_nl = "\n"
