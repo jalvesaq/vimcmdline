@@ -1,17 +1,18 @@
 # vimcmdline: Send lines to interpreter
 
-This plugin sends lines from the text editor [Vim] or [Neovim] to a command
-line interpreter. Supported file types are haskell, julia, lisp, matlab,
-prolog, python, ruby and sh. Below is an screenshot of *octave* running in
-Neovim built-in terminal:
+This plugin sends lines from either [Vim] or [Neovim] to a command line
+interpreter. Supported file types are haskell, julia, lisp, matlab, prolog,
+python, ruby and sh. The interpreter may run in a Tmux pane or in a Neovim
+built-in terminal. The main advantage of running the interpreter in a Neovim
+terminal is that the output is colorized, as in the screenshot below:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
 ## How to install
 
 Copy the directories *ftplugin*, *plugin* and *syntax* and their files to your
-*~/.vim* or *~/.nvim* directory, or use a plugin manager like [Vundle],
-[Pathogen], [Vim-Plug], [Neobundle], or other.
+*~/.vim* or *~/.config/nvim* directory, or use a plugin manager like
+[Vim-Plug], [Vundle], [Pathogen], [Neobundle], or other.
 
 ## Usage
 
@@ -39,7 +40,7 @@ For languages that can source chunks of code:
 
 ## Options
 
-Below are examples of how to set the options in your *vimrc* or *nvimrc*:
+Below are examples of how to set the options in your *vimrc*:
 
 ```vim
 let cmdline_vsplit = 1        " Split the window vertically
@@ -53,7 +54,7 @@ let cmdline_outhl = 1         " Syntax highlight the output
 
 If you are using Neovim, you can use its syntax highlight capabilities to
 colorize the interpreter output, and you can customize the colors in your
-*nvimrc*. The example of customization below is for a terminal emulator that
+*vimrc*. The example of customization below is for a terminal emulator that
 supports 256 colors (see in Neovim `:h highlight-ctermfg`):
 
 ```vim
@@ -84,7 +85,7 @@ possibilities), hover you mouse pointer over the table of colors at the end
 of http://www.lepem.ufc.br/jaa/colorout.html
 
 If you prefer that the output is highlighted using you current `colorscheme`,
-put in your *nvimrc*:
+put in your *vimrc*:
 
 ```vim
 let cmdline_follow_colorscheme = 1
