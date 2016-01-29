@@ -80,10 +80,6 @@ if &t_Co == 256
 endif
 ```
 
-To know what number corresponds to your preferred color (among the 256
-possibilities), hover you mouse pointer over the table of colors at the end
-of http://www.lepem.ufc.br/jaa/colorout.html
-
 If you prefer that the output is highlighted using you current `colorscheme`,
 put in your *vimrc*:
 
