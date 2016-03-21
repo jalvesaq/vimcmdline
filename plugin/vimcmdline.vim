@@ -175,12 +175,12 @@ function VimCmdLineStartApp()
         echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
         return
     endif
-    execute 'nnoremap <silent><buffer><space>' g:cmdline_visual_send_line_mapping ':call VimCmdLineSendLine()<CR>'
+    execute 'nnoremap <silent> <buffer> <space>' g:cmdline_visual_send_line_mapping ':call VimCmdLineSendLine()<CR>'
     if exists("b:cmdline_source_fun")
-        execute 'vnoremap <silent><buffer><space>' g:cmdline_visual_send_line_mapping '<esc>:call ' . b:cmdline_source_fun(getline("'<", "'>")) . '<CR>'
-        execute 'nnoremap <silent><buffer><space>' g:cmdline_send_file_mapping ':call ' . b:cmdline_source_fun(getline(1, "$")) . '<CR>'
-        execute 'nnoremap <silent><buffer><space>' g:cmdline_send_paragraph_mapping ':call VimCmdLineSendParagraph()<CR>'
-        execute 'nnoremap <silent><buffer><space>' g:cmdline_send_marked_block_mapping ':call VimCmdLineSendMBlock()<CR>'
+        execute 'vnoremap <silent> <buffer> <space>' g:cmdline_visual_send_line_mapping '<esc>:call ' . b:cmdline_source_fun(getline("'<", "'>")) . '<CR>'
+        execute 'nnoremap <silent> <buffer> <space>' g:cmdline_send_file_mapping ':call ' . b:cmdline_source_fun(getline(1, "$")) . '<CR>'
+        execute 'nnoremap <silent> <buffer> <space>' g:cmdline_send_paragraph_mapping ':call VimCmdLineSendParagraph()<CR>'
+        execute 'nnoremap <silent> <buffer> <space>' g:cmdline_send_marked_block_mapping ':call VimCmdLineSendMBlock()<CR>'
     endif
     if exists("b:cmdline_quit_cmd")
         execute 'nnoremap <silent><buffer><space>' g:cmdline_quit_mapping ':call VimCmdLineQuit()<CR>'
