@@ -183,7 +183,8 @@ function VimCmdLineStartApp()
         nmap <silent><buffer> <LocalLeader>b :call VimCmdLineSendMBlock()<CR>
     endif
     if exists("b:cmdline_quit_cmd")
-        execute 'nnoremap <silent><buffer><space>' g:cmdline_quit_mapping ':call VimCmdLineQuit()<CR>'
+        " execute 'nnoremap <silent><buffer><space>' g:cmdline_quit_mapping ':call VimCmdLineQuit()<CR>'
+        nnoremap <silent> <buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
     endif
 
     if !isdirectory(g:cmdline_tmp_dir)
