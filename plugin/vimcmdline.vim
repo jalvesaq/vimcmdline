@@ -150,11 +150,11 @@ function VimCmdLineStartApp()
         echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
         return
     endif
-    nmap <silent><buffer> <Space> :call VimCmdLineSendLine()<CR>
+    nmap <silent><buffer> <a-s-l> :call VimCmdLineSendLine()<CR>
     if exists("b:cmdline_source_fun")
-        vmap <silent><buffer> <Space> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
-        nmap <silent><buffer> <LocalLeader>f :call b:cmdline_source_fun(getline(1, "$"))<CR>
-        nmap <silent><buffer> <LocalLeader>p :call VimCmdLineSendParagraph()<CR>
+        vmap <silent><buffer> <c-c> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
+        nmap <silent><buffer> <a-s-f> :call b:cmdline_source_fun(getline(1, "$"))<CR>
+        nmap <silent><buffer> <c-c><c-c> :call VimCmdLineSendParagraph()<CR>
         nmap <silent><buffer> <LocalLeader>b :call VimCmdLineSendMBlock()<CR>
     endif
     if exists("b:cmdline_quit_cmd")
