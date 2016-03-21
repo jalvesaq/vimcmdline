@@ -14,7 +14,6 @@
 "==========================================================================
 " Author: Jakson Alves de Aquino <jalvesaq@gmail.com>
 "==========================================================================
-if exists(g:cmdline_send_line)
 
 if exists("g:did_cmdline")
     finish
@@ -55,6 +54,34 @@ if !exists("g:cmdline_tmp_dir")
 endif
 if !exists("g:cmdline_outhl")
     let g:cmdline_outhl = 1
+endif
+
+if !exists("g:cmdline_send_line_mapping")
+  let g:cmdline_send_line_mapping = '<space>'
+endif
+
+if !exists("g:cmdline_visual_send_line_mapping")
+  let g:cmdline_visual_send_line_mapping = '<space>'
+endif
+
+if !exists("g:cmdline_send_file_mapping")
+  let g:cmdline_send_file_mapping = '<LocalLeader>f'
+endif
+
+if !exists("g:cmdline_send_paragraph_mapping")
+  let g:cmdline_send_paragraph_mapping = '<LocalLeader>p'
+endif
+
+if !exists("g:cmdline_send_marked_block_mapping")
+  let g:cmdline_send_marked_block_mapping = '<LocalLeader>b'
+endif
+
+if !exists("g:cmdline_quit_mapping")
+  let g:cmdline_quit_mapping = '<LocalLeader>q'
+endif
+
+if !exists("g:cmdline_start_mapping")
+  let g:cmdline_start_mapping = '<LocalLeader>s'
 endif
 
 " Internal variables
@@ -151,13 +178,8 @@ function VimCmdLineStartApp()
         echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
         return
     endif
-    " nmap <silent><buffer> <Space> :call VimCmdLineSendLine()<CR>
     execute 'nnoremap <silent><buffer>' . g:cmdline_visual_send_line_mapping . ':call VimCmdLineSendLine()'<CR>
     if exists("b:cmdline_source_fun")
-        " vmap <silent><buffer> <Space> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
-        " nmap <silent><buffer> <LocalLeader>f :call b:cmdline_source_fun(getline(1, "$"))<CR>
-        " nmap <silent><buffer> <LocalLeader>p :call VimCmdLineSendParagraph()<CR>
-        " nmap <silent><buffer> <LocalLeader>b :call VimCmdLineSendMBlock()<CR>
         execute 'vnoremap <silent><buffer>' . g:cmdline_visual_send_line_mapping . '<esc>:call ' . b:cmdline_source_fun(getline("'<", "'>"))<CR>
         execute 'nnoremap <silent><buffer>' . g:cmdline_send_file_mapping . ':call ' . b:cmdline_source_fun(getline(1, "$"))<CR>
         execute 'nnoremap <silent><buffer>' . g:cmdline_send_paragraph_mapping . ':call VimCmdLineSendParagraph()'<CR>
@@ -165,7 +187,6 @@ function VimCmdLineStartApp()
     endif
     if exists("b:cmdline_quit_cmd")
         execute 'nnoremap <silent><buffer>' . g:cmdline_quit_mapping . ':call VimCmdLineQuit()'<CR>
-        nmap <silent><buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
     endif
 
     if !isdirectory(g:cmdline_tmp_dir)
