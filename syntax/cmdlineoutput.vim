@@ -49,18 +49,18 @@ syn match cmdlineDate "[0-9][0-9]:[0-9][0-9]:[0-9][-0-9]"
 
 " Input
 if exists("b:cmdline_prompt")
-    exe 'syn match cmdlineInput ' . b:cmdline_prompt
+    execute 'syn match cmdlineInput ' . b:cmdline_prompt
 endif
 if exists("b:cmdline_continue")
-    exe 'syn match cmdlineInput ' . b:cmdline_continue
+    execute 'syn match cmdlineInput ' . b:cmdline_continue
 endif
 
 " Errors and warnings
 if exists("b:cmdline_error")
-    exe 'syn match cmdlineError ' . b:cmdline_error
+    execute 'syn match cmdlineError ' . b:cmdline_error
 endif
 if exists("b:cmdline_warn")
-    exe 'syn match cmdlineWarn ' . b:cmdline_warn
+    execute 'syn match cmdlineWarn ' . b:cmdline_warn
 endif
 
 hi def link cmdlineInput	Comment
@@ -126,55 +126,55 @@ else
 
     " Change colors under user request:
     if exists("g:cmdline_color_input")
-        exe "hi cmdlineInput ctermfg=" . g:cmdline_color_input
+        execute "hi cmdlineInput ctermfg=" . g:cmdline_color_input
     endif
     if exists("g:cmdline_color_normal")
-        exe "hi cmdlineNormal ctermfg=" . g:cmdline_color_normal
+        execute "hi cmdlineNormal ctermfg=" . g:cmdline_color_normal
     endif
     if exists("g:cmdline_color_number")
-        exe "hi cmdlineNumber ctermfg=" . g:cmdline_color_number
+        execute "hi cmdlineNumber ctermfg=" . g:cmdline_color_number
     endif
     if exists("g:cmdline_color_integer")
-        exe "hi cmdlineInteger ctermfg=" . g:cmdline_color_integer
+        execute "hi cmdlineInteger ctermfg=" . g:cmdline_color_integer
     endif
     if exists("g:cmdline_color_float")
-        exe "hi cmdlineFloat ctermfg=" . g:cmdline_color_float
+        execute "hi cmdlineFloat ctermfg=" . g:cmdline_color_float
     endif
     if exists("g:cmdline_color_complex")
-        exe "hi cmdlineComplex ctermfg=" . g:cmdline_color_complex
+        execute "hi cmdlineComplex ctermfg=" . g:cmdline_color_complex
     endif
     if exists("g:cmdline_color_negnum")
-        exe "hi cmdlineNegNum ctermfg=" . g:cmdline_color_negnum
+        execute "hi cmdlineNegNum ctermfg=" . g:cmdline_color_negnum
     endif
     if exists("g:cmdline_color_negfloat")
-        exe "hi cmdlineNegFlt ctermfg=" . g:cmdline_color_negfloat
+        execute "hi cmdlineNegFlt ctermfg=" . g:cmdline_color_negfloat
     endif
     if exists("g:cmdline_color_date")
-        exe "hi cmdlineDate ctermfg=" . g:cmdline_color_date
+        execute "hi cmdlineDate ctermfg=" . g:cmdline_color_date
     endif
     if exists("g:cmdline_color_false")
-        exe "hi cmdlineFalse ctermfg=" . g:cmdline_color_false
+        execute "hi cmdlineFalse ctermfg=" . g:cmdline_color_false
     endif
     if exists("g:cmdline_color_true")
-        exe "hi cmdlineTrue ctermfg=" . g:cmdline_color_true
+        execute "hi cmdlineTrue ctermfg=" . g:cmdline_color_true
     endif
     if exists("g:cmdline_color_inf")
-        exe "hi cmdlineInf ctermfg=" . g:cmdline_color_inf
+        execute "hi cmdlineInf ctermfg=" . g:cmdline_color_inf
     endif
     if exists("g:cmdline_color_constant")
-        exe "hi cmdlineConst ctermfg=" . g:cmdline_color_constant
+        execute "hi cmdlineConst ctermfg=" . g:cmdline_color_constant
     endif
     if exists("g:cmdline_color_string")
-        exe "hi cmdlineString ctermfg=" . g:cmdline_color_string
+        execute "hi cmdlineString ctermfg=" . g:cmdline_color_string
     endif
     if exists("g:cmdline_color_error")
-        exe "hi cmdlineError ctermfg=" . g:cmdline_color_error
+        execute "hi cmdlineError ctermfg=" . g:cmdline_color_error
     endif
     if exists("g:cmdline_color_warn")
-        exe "hi cmdlineWarn ctermfg=" . g:cmdline_color_warn
+        execute "hi cmdlineWarn ctermfg=" . g:cmdline_color_warn
     endif
     if exists("g:cmdline_color_index")
-        exe "hi cmdlineIndex ctermfg=" . g:cmdline_color_index
+        execute "hi cmdlineIndex ctermfg=" . g:cmdline_color_index
     endif
 endif
 
