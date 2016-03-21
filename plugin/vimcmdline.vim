@@ -80,9 +80,6 @@ if !exists("g:cmdline_quit_mapping")
   let g:cmdline_quit_mapping = '<LocalLeader>q'
 endif
 
-if !exists("g:cmdline_start_mapping")
-  let g:cmdline_start_mapping = '<LocalLeader>s'
-endif
 
 " Internal variables
 let s:cmdline_job = 0
