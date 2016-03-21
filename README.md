@@ -38,6 +38,18 @@ For languages that can source chunks of code:
 
     - `<LocalLeader>f` to send the entire file to the interpreter.
 
+These mappings can be customized in the following way:
+
+```vim
+let g:cmdline_send_line_mapping = '<space>'
+let g:cmdline_visual_send_line_mapping = '<space>'
+let g:cmdline_send_file_mapping = '<LocalLeader>f'
+let g:cmdline_send_paragraph_mapping = '<LocalLeader>p'
+let g:cmdline_send_marked_block_mapping = '<LocalLeader>b'
+let g:cmdline_quit_mapping = '<LocalLeader>q'
+```
+
+
 ## Options
 
 Below are examples of how to set the options in your *vimrc*:
