@@ -13,6 +13,7 @@ let b:cmdline_quit_cmd = "exit"
 let b:cmdline_source_fun = function("ShellSourceLines")
 let b:cmdline_send_empty = 0
 
-execute 'nnoremap <buffer>' g:cmdline_start_mapping ':call VimCmdLineStartApp()<CR>'
+" execute 'nnoremap <buffer>' g:cmdline_start_mapping ':call VimCmdLineStartApp()<CR>'
+nnoremap <buffer> <LocalLeader>s :call VimCmdLineStartApp()<CR>
 
 execute 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.sh")'
