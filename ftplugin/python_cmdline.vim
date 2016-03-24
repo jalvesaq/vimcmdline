@@ -4,7 +4,7 @@ endfunction
 
 let b:cmdline_nl = "\n"
 " let b:cmdline_app = "python"
-let b:cmdline_app = "ptipython3"
+let b:cmdline_app = "ptipython"
 let b:cmdline_quit_cmd = "quit()"
 let b:cmdline_source_fun = function("PythonSourceLines")
 let b:cmdline_send_empty = 1
