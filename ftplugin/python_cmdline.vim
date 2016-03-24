@@ -2,7 +2,7 @@ function! PythonSourceLines(lines)
     call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
 endfunction
 
-if !exists(g:cmdline_python_app)
+if !exists("g:cmdline_python_app")
     let g:cmdline_python_app = "python"
 endif
 
