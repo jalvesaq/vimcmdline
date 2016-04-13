@@ -87,6 +87,11 @@ put in your *vimrc*:
 let cmdline_follow_colorscheme = 1
 ```
 
+## See also
+
+A plugin with similar functionality is [neoterm].
+
+[neoterm]: https://github.com/kassio/neoterm
 [Vim]: http://www.vim.org
 [Neovim]: https://github.com/neovim/neovim
 [Vundle]: https://github.com/gmarik/Vundle.vim
