@@ -178,6 +178,9 @@ function VimCmdLineSendCmd(...)
         call jobsend(s:cmdline_job, a:1 . b:cmdline_nl)
     elseif s:cmdline_app_pane != ''
         let str = substitute(a:1, "'", "'\\\\''", "g")
+        if str =~ '^-'
+            let str = ' ' . str
+        endif
         let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
         let slog = system(scmd)
         if v:shell_error
