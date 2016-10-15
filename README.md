@@ -89,7 +89,7 @@ let cmdline_follow_colorscheme = 1
 
 ## See also
 
-A plugin with similar functionality is [neoterm].
+Plugins with similar functionality are [neoterm] and [vim-slime].
 
 [neoterm]: https://github.com/kassio/neoterm
 [Vim]: http://www.vim.org
@@ -98,3 +98,4 @@ A plugin with similar functionality is [neoterm].
 [Pathogen]: https://github.com/tpope/vim-pathogen
 [Vim-Plug]: https://github.com/junegunn/vim-plug
 [Neobundle]: https://github.com/Shougo/neobundle.vim
+[vim-slime]: https://github.com/jpalardy/vim-slime
