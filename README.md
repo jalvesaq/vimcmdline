@@ -4,7 +4,9 @@ This plugin sends lines from either [Vim] or [Neovim] to a command line
 interpreter. Supported file types are haskell, julia, lisp, matlab, prolog,
 python, ruby and sh. The interpreter may run in a Tmux pane or in a Neovim
 built-in terminal. The main advantage of running the interpreter in a Neovim
-terminal is that the output is colorized, as in the screenshot below:
+terminal is that the output is colorized, as in the screenshot below, where we
+have different colors for general output, positive and negative numbers, and
+the prompt line:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
