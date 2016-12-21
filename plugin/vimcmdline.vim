@@ -56,6 +56,31 @@ if !exists("g:cmdline_outhl")
     let g:cmdline_outhl = 1
 endif
 
+if !exists("g:cmdline_send_line_mapping")
+  let g:cmdline_send_line_mapping = '<space>'
+endif
+
+if !exists("g:cmdline_visual_send_line_mapping")
+  let g:cmdline_visual_send_line_mapping = '<space>'
+endif
+
+if !exists("g:cmdline_send_file_mapping")
+  let g:cmdline_send_file_mapping = '<LocalLeader>f'
+endif
+
+if !exists("g:cmdline_send_paragraph_mapping")
+  let g:cmdline_send_paragraph_mapping = '<LocalLeader>p'
+endif
+
+if !exists("g:cmdline_send_marked_block_mapping")
+  let g:cmdline_send_marked_block_mapping = '<LocalLeader>b'
+endif
+
+if !exists("g:cmdline_quit_mapping")
+  let g:cmdline_quit_mapping = '<LocalLeader>q'
+endif
+
+
 " Internal variables
 let s:cmdline_job = 0
 let s:cmdline_app_pane = ''
@@ -102,13 +127,13 @@ function VimCmdLineStart_Tmux(app)
     let tcmd .= " " . a:app
     let slog = system(tcmd)
     if v:shell_error
-        exe 'echoerr ' . slog
+        execute 'echoerr ' . slog
         return
     endif
     let s:cmdline_app_pane = GetTmuxActivePane()
     let slog = system("tmux select-pane -t " . g:cmdline_vim_pane)
     if v:shell_error
-        exe 'echoerr ' . slog
+        execute 'echoerr ' . slog
         return
     endif
     " call VimCmdLineSendCmd(a:app)
@@ -120,13 +145,13 @@ function VimCmdLineStart_Nvim(app)
     set switchbuf=useopen
     if g:cmdline_vsplit
         if g:cmdline_term_width > 16 && g:cmdline_term_width < (winwidth(0) - 16)
-            silent exe "belowright " . g:cmdline_term_width . "vnew"
+            silent execute "belowright " . g:cmdline_term_width . "vnew"
         else
             silent belowright vnew
         endif
     else
         if g:cmdline_term_height > 6 && g:cmdline_term_height < (winheight(0) - 6)
-            silent exe "belowright " . g:cmdline_term_height . "new"
+            silent execute "belowright " . g:cmdline_term_height . "new"
         else
             silent belowright new
         endif
@@ -138,9 +163,9 @@ function VimCmdLineStart_Nvim(app)
         tnoremap <buffer> <Esc> <C-\><C-n>
     endif
     if g:cmdline_outhl
-        exe 'runtime syntax/cmdlineoutput_' . a:app . '.vim'
+        execute 'runtime syntax/cmdlineoutput_' . a:app . '.vim'
     endif
-    exe "sbuffer " . edbuf
+    execute "sbuffer " . edbuf
     stopinsert
 endfunction
 
@@ -150,15 +175,16 @@ function VimCmdLineStartApp()
         echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
         return
     endif
-    nmap <silent><buffer> <Space> :call VimCmdLineSendLine()<CR>
+    nmap <silent><buffer> <a-s-l> :call VimCmdLineSendLine()<CR>
     if exists("b:cmdline_source_fun")
-        vmap <silent><buffer> <Space> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
-        nmap <silent><buffer> <LocalLeader>f :call b:cmdline_source_fun(getline(1, "$"))<CR>
-        nmap <silent><buffer> <LocalLeader>p :call VimCmdLineSendParagraph()<CR>
+        vmap <silent><buffer> <c-c> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
+        nmap <silent><buffer> <a-s-f> :call b:cmdline_source_fun(getline(1, "$"))<CR>
+        nmap <silent><buffer> <c-c><c-c> :call VimCmdLineSendParagraph()<CR>
         nmap <silent><buffer> <LocalLeader>b :call VimCmdLineSendMBlock()<CR>
     endif
     if exists("b:cmdline_quit_cmd")
-        nmap <silent><buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
+        " execute 'nnoremap <silent><buffer><space>' g:cmdline_quit_mapping ':call VimCmdLineQuit()<CR>'
+        nnoremap <silent> <buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
     endif
 
     if !isdirectory(g:cmdline_tmp_dir)
@@ -186,7 +212,7 @@ function VimCmdLineSendCmd(...)
         if v:shell_error
             let slog = substitute(rlog, "\n", " ", "g")
             let slog = substitute(rlog, "\r", " ", "g")
-            exe 'echoerr ' . slog
+            execute 'echoerr ' . slog
             let s:cmdline_app_pane = ''
         endif
     endif
@@ -261,7 +287,7 @@ function VimCmdLineQuit()
     if exists("b:cmdline_quit_cmd")
         call VimCmdLineSendCmd(b:cmdline_quit_cmd)
         if exists("s:cmdline_bufname")
-            exe "sb " . s:cmdline_bufname
+            execute "sb " . s:cmdline_bufname
             startinsert
         endif
     else

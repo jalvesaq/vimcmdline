@@ -8,5 +8,9 @@ syn match cmdlineInput "^Prelude>.*"
 
 " Errors and warnings
 syn match cmdlineError "^<interactive>:.*"
+syn match cmdlineError ".*Not in scope>.*"
+syn match cmdlineError "^\*\*\* Exception:.*"
+syn match cmdlineError "^Failed.*"
+syn match cmdlineError ".*parse error .*"
 
 
