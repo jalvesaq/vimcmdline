@@ -16,4 +16,4 @@ let b:cmdline_send_empty = 0
 
 nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
 
-exe 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.hs")'
+execute 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.hs")'
