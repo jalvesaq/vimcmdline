@@ -2,10 +2,6 @@ function! PythonSourceLines(lines)
     call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
 endfunction
 
-if !exists("g:cmdline_ipyhton")
-    let g:cmdline_ipyhton = 0 
-endif
-
 if g:cmdline_ipyhton
     let b:cmdline_app = "ipython"
 else
