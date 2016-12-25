@@ -150,15 +150,19 @@ function VimCmdLineStartApp()
         echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
         return
     endif
-    nmap <silent><buffer> <Space> :call VimCmdLineSendLine()<CR>
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' :call VimCmdLineSendLine()<CR>'
     if exists("b:cmdline_source_fun")
-        vmap <silent><buffer> <Space> <Esc>:call b:cmdline_source_fun(getline("'<", "'>"))<CR>
-        nmap <silent><buffer> <LocalLeader>f :call b:cmdline_source_fun(getline(1, "$"))<CR>
-        nmap <silent><buffer> <LocalLeader>p :call VimCmdLineSendParagraph()<CR>
-        nmap <silent><buffer> <LocalLeader>b :call VimCmdLineSendMBlock()<CR>
+        exe 'vmap <silent><buffer> ' . g:cmdline_map_send .
+                    \ ' <Esc>:call b:cmdline_source_fun(getline("' . "'" . '<", "'. "'". '>"))<CR>'
+        exe 'nmap <silent><buffer> ' . g:cmdline_map_source_fun .
+                    \ ' :call b:cmdline_source_fun(getline(1, "$"))<CR>'
+        exe 'nmap <silent><buffer> ' . g:cmdline_map_send_paragraph .
+                    \ ' :call VimCmdLineSendParagraph()<CR>'
+        exe 'nmap <silent><buffer> ' . g:cmdline_map_send_block .
+                    \ ' :call VimCmdLineSendMBlock()<CR>'
     endif
     if exists("b:cmdline_quit_cmd")
-        nmap <silent><buffer> <LocalLeader>q :call VimCmdLineQuit()<CR>
+        exe 'nmap <silent><buffer> ' . g:cmdline_map_quit . ' :call VimCmdLineQuit()<CR>'
     endif
 
     if !isdirectory(g:cmdline_tmp_dir)
@@ -275,3 +279,20 @@ function s:VimCmdLineJobExit(job_id, data, etype)
         let s:cmdline_job = 0
     endif
 endfunction
+
+" Default mappings
+if !exists("g:cmdline_map_send")
+    let g:cmdline_map_send = "<Space>"
+endif
+if !exists("g:cmdline_map_source_fun")
+    let g:cmdline_map_source_fun = "<LocalLeader>f"
+endif
+if !exists("g:cmdline_map_send_paragraph")
+    let g:cmdline_map_send_paragraph = "<LocalLeader>p"
+endif
+if !exists("g:cmdline_map_send_block")
+    let g:cmdline_map_send_block = "<LocalLeader>b"
+endif
+if !exists("g:cmdline_map_quit")
+    let g:cmdline_map_quit = "<LocalLeader>q"
+endif

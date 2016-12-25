@@ -45,6 +45,14 @@ For languages that can source chunks of code:
 Below are examples of how to set the options in your *vimrc*:
 
 ```vim
+" vimcmdline mappings
+let cmdline_map_send = "<Space>"
+let cmdline_map_source_fun = "<LocalLeader>f"
+let cmdline_map_send_paragraph = "<LocalLeader>p"
+let cmdline_map_send_block = "<LocalLeader>b"
+let cmdline_map_quit = "<LocalLeader>q"
+
+" vimcmdline options
 let cmdline_vsplit = 1        " Split the window vertically
 let cmdline_esc_term = 1      " Remap <Esc> to :stopinsert in Neovim terminal
 let cmdline_in_buffer = 0     " Start the interpreter in a Neovim buffer
