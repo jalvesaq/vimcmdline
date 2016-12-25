@@ -270,9 +270,8 @@ function VimCmdLineQuit()
 endfunction
 
 " Register that the job no longer exists
-function s:VimCmdLineJobExit(job_id, data)
+function s:VimCmdLineJobExit(job_id, data, etype)
     if a:job_id == s:cmdline_job
         let s:cmdline_job = 0
     endif
 endfunction
-
