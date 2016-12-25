@@ -1,12 +1,12 @@
 # vimcmdline: Send lines to interpreter
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
-interpreter. Supported file types are haskell, julia, lisp, matlab, prolog,
-python, ruby and sh. The interpreter may run in a Tmux pane or in a Neovim
-built-in terminal. The main advantage of running the interpreter in a Neovim
-terminal is that the output is colorized, as in the screenshot below, where we
-have different colors for general output, positive and negative numbers, and
-the prompt line:
+interpreter (REPL application). Supported file types are haskell, julia, lisp,
+matlab, prolog, python, ruby and sh. The interpreter may run in a Tmux pane or
+in a Neovim built-in terminal. The main advantage of running the interpreter
+in a Neovim terminal is that the output is colorized, as in the screenshot
+below, where we have different colors for general output, positive and
+negative numbers, and the prompt line:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
@@ -55,7 +55,7 @@ let cmdline_map_quit = "<LocalLeader>q"
 " vimcmdline options
 let cmdline_vsplit = 1        " Split the window vertically
 let cmdline_esc_term = 1      " Remap <Esc> to :stopinsert in Neovim terminal
-let cmdline_in_buffer = 0     " Start the interpreter in a Neovim buffer
+let cmdline_in_buffer = 1     " Start the interpreter in a Neovim buffer
 let cmdline_term_height = 15  " Initial height of interpreter window or pane
 let cmdline_term_width = 80   " Initial width of interpreter window or pane
 let cmdline_tmp_dir = '/tmp'  " Temporary directory to save files
@@ -108,6 +108,17 @@ put in your *vimrc*:
 ```vim
 let cmdline_follow_colorscheme = 1
 ```
+Finally, if you want to run the interpreter in an external terminal emulator,
+you have to define the command run it, as in the examples below:
+
+```vim
+let cmdline_external_term_cmd = "gnome-terminal -e '%s'"
+let cmdline_external_term_cmd = "xterm -e '%s' &"
+```
+
+where `%s` will be replaced with the terminal command required to run the REPL
+application in a Tmux session. Note that `gnome-terminal` does not require an
+`&` at the end of the command because it forks immediately after startup.
 
 ## See also
 

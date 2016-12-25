@@ -86,6 +86,42 @@ function GetTmuxActivePane()
   endif
 endfunction
 
+function VimCmdLineStart_ExTerm(app)
+    " Check if the REPL application is already running
+    if exists("b:cmdline_tmuxsname")
+        let tout = system("tmux -L VimCmdLine has-session -t " . b:cmdline_tmuxsname)
+        if tout =~ "VimCmdLine" || tout =~ b:cmdline_tmuxsname
+            unlet b:cmdline_tmuxsname
+        else
+            echohl WarningMsg
+            echo 'Tmux session with "' . b:cmdline_app . '" is already running.'
+            echohl Normal
+            return
+        endif
+    endif
+
+    let b:cmdline_tmuxsname = "vcl" . localtime()
+
+    let cnflines = ['set-option -g prefix C-a',
+                \ 'unbind-key C-b',
+                \ 'bind-key C-a send-prefix',
+                \ 'set-window-option -g mode-keys vi',
+                \ 'set -g status off',
+                \ 'set -g default-terminal "screen-256color"',
+                \ "set -g terminal-overrides 'xterm*:smcup@:rmcup@'" ]
+    if g:cmdline_external_term_cmd =~ "rxvt" || g:cmdline_external_term_cmd =~ "urxvt"
+        let cnflines = cnflines + [
+                    \ "set terminal-overrides 'rxvt*:smcup@:rmcup@'" ]
+    endif
+    call writefile(cnflines, g:cmdline_tmp_dir . "/tmux.conf")
+
+
+    let cmd = printf(g:cmdline_external_term_cmd,
+                \ 'tmux -2 -f "' . g:cmdline_tmp_dir . '/tmux.conf' .
+                \ '" -L VimCmdLine new-session -s ' . b:cmdline_tmuxsname . ' ' . a:app)
+    call system(cmd)
+endfunction
+
 " Run the interpreter in a Tmux panel
 function VimCmdLineStart_Tmux(app)
     let g:cmdline_vim_pane = GetTmuxActivePane()
@@ -169,10 +205,14 @@ function VimCmdLineStartApp()
         call mkdir(g:cmdline_tmp_dir)
     endif
 
-    if g:cmdline_in_buffer
-        call VimCmdLineStart_Nvim(b:cmdline_app)
+    if exists("g:cmdline_external_term_cmd")
+        call VimCmdLineStart_ExTerm(b:cmdline_app)
     else
-        call VimCmdLineStart_Tmux(b:cmdline_app)
+        if g:cmdline_in_buffer
+            call VimCmdLineStart_Nvim(b:cmdline_app)
+        else
+            call VimCmdLineStart_Tmux(b:cmdline_app)
+        endif
     endif
 endfunction
 
@@ -180,18 +220,30 @@ endfunction
 function VimCmdLineSendCmd(...)
     if s:cmdline_job
         call jobsend(s:cmdline_job, a:1 . b:cmdline_nl)
-    elseif s:cmdline_app_pane != ''
+    else
         let str = substitute(a:1, "'", "'\\\\''", "g")
         if str =~ '^-'
             let str = ' ' . str
         endif
-        let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
-        let slog = system(scmd)
-        if v:shell_error
-            let slog = substitute(rlog, "\n", " ", "g")
-            let slog = substitute(rlog, "\r", " ", "g")
-            exe 'echoerr ' . slog
-            let s:cmdline_app_pane = ''
+        if exists("g:cmdline_external_term_cmd") && exists("b:cmdline_tmuxsname")
+            let scmd = "tmux -L VimCmdLine set-buffer '" . str .
+                        \ "\<C-M>' && tmux -L VimCmdLine paste-buffer -t " . b:cmdline_tmuxsname . '.0'
+            call system(scmd)
+            if v:shell_error
+                echohl WarningMsg
+                echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
+                echohl Normal
+                unlet b:cmdline_tmuxsname
+            endif
+        elseif s:cmdline_app_pane != ''
+            let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
+            call system(scmd)
+            if v:shell_error
+                echohl WarningMsg
+                echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
+                echohl Normal
+                let s:cmdline_app_pane = ''
+            endif
         endif
     endif
 endfunction
