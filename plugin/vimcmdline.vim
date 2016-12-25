@@ -57,8 +57,13 @@ if !exists("g:cmdline_outhl")
 endif
 
 " Internal variables
-let s:cmdline_job = 0
+let g:cmdline_job = {"haskell": 0, "julia": 0, "lisp": 0, "matlab": 0,
+            \ "prolog": 0, "python": 0, "ruby": 0, "sh": 0}
+let g:cmdline_termbuf = {"haskell": "", "julia": "", "lisp": "", "matlab": "",
+            \ "prolog": "", "python": "", "ruby": "", "sh": ""}
 let s:cmdline_app_pane = ''
+let g:cmdline_tmuxsname = {"haskell": "", "julia": "", "lisp": "", "matlab": "",
+            \ "prolog": "", "python": "", "ruby": "", "sh": ""}
 
 " Skip empty lines
 function s:GoLineDown()
@@ -88,10 +93,10 @@ endfunction
 
 function VimCmdLineStart_ExTerm(app)
     " Check if the REPL application is already running
-    if exists("b:cmdline_tmuxsname")
-        let tout = system("tmux -L VimCmdLine has-session -t " . b:cmdline_tmuxsname)
-        if tout =~ "VimCmdLine" || tout =~ b:cmdline_tmuxsname
-            unlet b:cmdline_tmuxsname
+    if g:cmdline_tmuxsname[&filetype] != ""
+        let tout = system("tmux -L VimCmdLine has-session -t " . g:cmdline_tmuxsname[&filetype])
+        if tout =~ "VimCmdLine" || tout =~ g:cmdline_tmuxsname[&filetype]
+            unlet g:cmdline_tmuxsname[&filetype]
         else
             echohl WarningMsg
             echo 'Tmux session with "' . b:cmdline_app . '" is already running.'
@@ -100,7 +105,7 @@ function VimCmdLineStart_ExTerm(app)
         endif
     endif
 
-    let b:cmdline_tmuxsname = "vcl" . localtime()
+    let g:cmdline_tmuxsname[&filetype] = "vcl" . localtime()
 
     let cnflines = ['set-option -g prefix C-a',
                 \ 'unbind-key C-b',
@@ -118,7 +123,7 @@ function VimCmdLineStart_ExTerm(app)
 
     let cmd = printf(g:cmdline_external_term_cmd,
                 \ 'tmux -2 -f "' . g:cmdline_tmp_dir . '/tmux.conf' .
-                \ '" -L VimCmdLine new-session -s ' . b:cmdline_tmuxsname . ' ' . a:app)
+                \ '" -L VimCmdLine new-session -s ' . g:cmdline_tmuxsname[&filetype] . ' ' . a:app)
     call system(cmd)
 endfunction
 
@@ -147,12 +152,15 @@ function VimCmdLineStart_Tmux(app)
         exe 'echoerr ' . slog
         return
     endif
-    " call VimCmdLineSendCmd(a:app)
 endfunction
 
 " Run the interpreter in a Neovim terminal buffer
 function VimCmdLineStart_Nvim(app)
     let edbuf = bufname("%")
+    let thisft = &filetype
+    if g:cmdline_job[&filetype]
+        return
+    endif
     set switchbuf=useopen
     if g:cmdline_vsplit
         if g:cmdline_term_width > 16 && g:cmdline_term_width < (winwidth(0) - 16)
@@ -167,9 +175,8 @@ function VimCmdLineStart_Nvim(app)
             silent belowright new
         endif
     endif
-    let s:cmdline_job = termopen(a:app, {'on_exit': function('s:VimCmdLineJobExit')})
-    let s:cmdline_bufname = bufname("%")
-    let b:script_buffer = edbuf
+    let g:cmdline_job[thisft] = termopen(a:app, {'on_exit': function('s:VimCmdLineJobExit')})
+    let g:cmdline_termbuf[thisft] = bufname("%")
     if g:cmdline_esc_term
         tnoremap <buffer> <Esc> <C-\><C-n>
     endif
@@ -180,12 +187,7 @@ function VimCmdLineStart_Nvim(app)
     stopinsert
 endfunction
 
-" Common procedure to start the interpreter
-function VimCmdLineStartApp()
-    if !exists("b:cmdline_app")
-        echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
-        return
-    endif
+function VimCmdLineCreateMaps()
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' :call VimCmdLineSendLine()<CR>'
     if exists("b:cmdline_source_fun")
         exe 'vmap <silent><buffer> ' . g:cmdline_map_send .
@@ -200,6 +202,16 @@ function VimCmdLineStartApp()
     if exists("b:cmdline_quit_cmd")
         exe 'nmap <silent><buffer> ' . g:cmdline_map_quit . ' :call VimCmdLineQuit()<CR>'
     endif
+endfunction
+
+" Common procedure to start the interpreter
+function VimCmdLineStartApp()
+    if !exists("b:cmdline_app")
+        echomsg 'There is no application defined to be executed for file of type "' . &filetype . '".'
+        return
+    endif
+
+    call VimCmdLineCreateMaps()
 
     if !isdirectory(g:cmdline_tmp_dir)
         call mkdir(g:cmdline_tmp_dir)
@@ -218,22 +230,22 @@ endfunction
 
 " Send a single line to the interpreter
 function VimCmdLineSendCmd(...)
-    if s:cmdline_job
-        call jobsend(s:cmdline_job, a:1 . b:cmdline_nl)
+    if g:cmdline_job[&filetype]
+        call jobsend(g:cmdline_job[&filetype], a:1 . b:cmdline_nl)
     else
         let str = substitute(a:1, "'", "'\\\\''", "g")
         if str =~ '^-'
             let str = ' ' . str
         endif
-        if exists("g:cmdline_external_term_cmd") && exists("b:cmdline_tmuxsname")
+        if exists("g:cmdline_external_term_cmd") && g:cmdline_tmuxsname[&filetype] != ""
             let scmd = "tmux -L VimCmdLine set-buffer '" . str .
-                        \ "\<C-M>' && tmux -L VimCmdLine paste-buffer -t " . b:cmdline_tmuxsname . '.0'
+                        \ "\<C-M>' && tmux -L VimCmdLine paste-buffer -t " . g:cmdline_tmuxsname[&filetype] . '.0'
             call system(scmd)
             if v:shell_error
                 echohl WarningMsg
                 echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
                 echohl Normal
-                unlet b:cmdline_tmuxsname
+                unlet g:cmdline_tmuxsname[&filetype]
             endif
         elseif s:cmdline_app_pane != ''
             let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
@@ -316,10 +328,13 @@ endfunction
 function VimCmdLineQuit()
     if exists("b:cmdline_quit_cmd")
         call VimCmdLineSendCmd(b:cmdline_quit_cmd)
-        if exists("s:cmdline_bufname")
-            exe "sb " . s:cmdline_bufname
+        if g:cmdline_termbuf[&filetype] != ""
+            exe "sb " . g:cmdline_termbuf[&filetype]
             startinsert
+            let g:cmdline_termbuf[&filetype] = ""
         endif
+        let g:cmdline_tmuxsname[&filetype] = ""
+        let s:cmdline_app_pane = ''
     else
         echomsg 'Quit command not defined for file of type "' . &filetype . '".'
     endif
@@ -327,9 +342,11 @@ endfunction
 
 " Register that the job no longer exists
 function s:VimCmdLineJobExit(job_id, data, etype)
-    if a:job_id == s:cmdline_job
-        let s:cmdline_job = 0
-    endif
+    for ftype in keys(g:cmdline_job)
+        if a:job_id == g:cmdline_job[ftype]
+            let g:cmdline_job[ftype] = 0
+        endif
+    endfor
 endfunction
 
 " Replace default application with custom one
@@ -340,6 +357,9 @@ function VimCmdLineSetApp(ftype)
                 let b:cmdline_app = g:cmdline_app[a:ftype]
             endif
         endfor
+    endif
+    if g:cmdline_job[&filetype] || g:cmdline_tmuxsname[&filetype] != "" || s:cmdline_app_pane != ''
+        call VimCmdLineCreateMaps()
     endif
 endfunction
 

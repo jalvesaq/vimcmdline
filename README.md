@@ -2,11 +2,15 @@
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
 interpreter (REPL application). Supported file types are haskell, julia, lisp,
-matlab, prolog, python, ruby and sh. The interpreter may run in a Tmux pane or
-in a Neovim built-in terminal. The main advantage of running the interpreter
-in a Neovim terminal is that the output is colorized, as in the screenshot
-below, where we have different colors for general output, positive and
-negative numbers, and the prompt line:
+matlab, prolog, python, ruby and sh. The interpreter may run in a Neovim
+built-in terminal, an external terminal emulator or in a Tmux pane. The main
+advantage of running the interpreter in a Neovim terminal is that the output
+is colorized, as in the screenshot below, where we have different colors for
+general output, positive and negative numbers, and the prompt line:
+
+If running in either a Neovim buitin terminal or a external terminal, the
+plugin runs one instance of the REPL application for each file type. If
+running in Tmux pane, it runs one REPL application for Vim instance.
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
