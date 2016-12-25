@@ -280,6 +280,17 @@ function s:VimCmdLineJobExit(job_id, data, etype)
     endif
 endfunction
 
+" Replace default application with custom one
+function VimCmdLineSetApp(ftype)
+    if exists("g:cmdline_app")
+        for key in keys(g:cmdline_app)
+            if key == a:ftype
+                let b:cmdline_app = g:cmdline_app[a:ftype]
+            endif
+        endfor
+    endif
+endfunction
+
 " Default mappings
 if !exists("g:cmdline_map_send")
     let g:cmdline_map_send = "<Space>"

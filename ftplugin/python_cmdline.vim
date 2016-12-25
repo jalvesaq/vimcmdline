@@ -10,3 +10,4 @@ let b:cmdline_send_empty = 1
 
 nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
 
+call VimCmdLineSetApp("python")

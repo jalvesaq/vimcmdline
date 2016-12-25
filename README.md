@@ -62,6 +62,18 @@ let cmdline_tmp_dir = '/tmp'  " Temporary directory to save files
 let cmdline_outhl = 1         " Syntax highlight the output
 ```
 
+You can also define what application will be run as interpreter for each
+supported file type. If you want to do this, create a dictionary called
+`cmdline_app`, and add items with the 'filetype' as key and the interpreter as
+value, as in the example below:
+
+```vim
+let cmdline_app = {}
+let cmdline_app["python"] = "ptipython3"
+let cmdline_app["ruby"] = "pry"
+let cmdline_app["sh"] = "bash"
+```
+
 If you are using Neovim, you can use its syntax highlight capabilities to
 colorize the interpreter output, and you can customize the colors in your
 *vimrc*. The example of customization below is for a terminal emulator that
