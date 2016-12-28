@@ -10,7 +10,7 @@ let b:cmdline_quit_cmd = "exit"
 let b:cmdline_source_fun = function("ShellSourceLines")
 let b:cmdline_send_empty = 0
 
-nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
+exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 
 exe 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.sh")'
 

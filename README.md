@@ -50,6 +50,7 @@ Below are examples of how to set the options in your *vimrc*:
 
 ```vim
 " vimcmdline mappings
+let cmdline_map_start = "<LocalLeader>s"
 let cmdline_map_send = "<Space>"
 let cmdline_map_source_fun = "<LocalLeader>f"
 let cmdline_map_send_paragraph = "<LocalLeader>p"

@@ -8,6 +8,6 @@ let b:cmdline_quit_cmd = "quit()"
 let b:cmdline_source_fun = function("PythonSourceLines")
 let b:cmdline_send_empty = 1
 
-nmap <buffer><silent> <LocalLeader>s :call VimCmdLineStartApp()<CR>
+exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 
 call VimCmdLineSetApp("python")

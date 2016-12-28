@@ -364,6 +364,9 @@ function VimCmdLineSetApp(ftype)
 endfunction
 
 " Default mappings
+if !exists("g:cmdline_map_start")
+    let g:cmdline_map_start = "<LocalLeader>s"
+endif
 if !exists("g:cmdline_map_send")
     let g:cmdline_map_send = "<Space>"
 endif
