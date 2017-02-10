@@ -58,12 +58,12 @@ endif
 
 " Internal variables
 let g:cmdline_job = {"haskell": 0, "julia": 0, "lisp": 0, "matlab": 0,
-            \ "prolog": 0, "python": 0, "ruby": 0, "sh": 0}
+            \ "prolog": 0, "python": 0, "ruby": 0, "sh": 0, "javascript": 0}
 let g:cmdline_termbuf = {"haskell": "", "julia": "", "lisp": "", "matlab": "",
-            \ "prolog": "", "python": "", "ruby": "", "sh": ""}
+            \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": ""}
 let s:cmdline_app_pane = ''
 let g:cmdline_tmuxsname = {"haskell": "", "julia": "", "lisp": "", "matlab": "",
-            \ "prolog": "", "python": "", "ruby": "", "sh": ""}
+            \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": ""}
 
 " Skip empty lines
 function s:GoLineDown()
