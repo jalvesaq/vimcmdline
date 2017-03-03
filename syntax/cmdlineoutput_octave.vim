@@ -8,5 +8,3 @@ syn match cmdlineInput "^octave:.*"
 
 " Errors and warnings
 syn match cmdlineError "^error:.*"
-
-

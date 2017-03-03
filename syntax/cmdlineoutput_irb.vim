@@ -5,4 +5,3 @@ runtime syntax/cmdlineoutput.vim
 
 " Input
 syn match cmdlineInput "^irb(.*"
-

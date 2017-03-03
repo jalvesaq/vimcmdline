@@ -9,5 +9,3 @@ syn match cmdlineInput "^> .*"
 
 " Errors and warnings
 syn match cmdlineError "^sh: .*"
-
-

@@ -8,5 +8,3 @@ syn match cmdlineInput "^Prelude>.*"
 
 " Errors and warnings
 syn match cmdlineError "^<interactive>:.*"
-
-

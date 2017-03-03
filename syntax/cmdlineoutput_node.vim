@@ -1,5 +1,5 @@
 " Vim syntax file
-" Language:    No language. Output additionals for octave
+" Language:    No language. Output additionals for node
 
 runtime syntax/cmdlineoutput.vim
 
