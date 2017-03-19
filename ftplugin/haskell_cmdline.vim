@@ -13,6 +13,7 @@ endif
 let b:cmdline_quit_cmd = ":quit"
 let b:cmdline_source_fun = function("HaskellSourceLines")
 let b:cmdline_send_empty = 0
+let b:cmdline_filetype = "haskell"
 
 exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 

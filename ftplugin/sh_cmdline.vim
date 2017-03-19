@@ -9,6 +9,7 @@ let b:cmdline_app = "sh"
 let b:cmdline_quit_cmd = "exit"
 let b:cmdline_source_fun = function("ShellSourceLines")
 let b:cmdline_send_empty = 0
+let b:cmdline_filetype = "sh"
 
 exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 

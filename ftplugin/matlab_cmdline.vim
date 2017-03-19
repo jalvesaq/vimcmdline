@@ -9,6 +9,7 @@ let b:cmdline_app = "octave"
 let b:cmdline_quit_cmd = "exit"
 let b:cmdline_source_fun = function("OctaveSourceLines")
 let b:cmdline_send_empty = 0
+let b:cmdline_filetype = "matlab"
 
 exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 
