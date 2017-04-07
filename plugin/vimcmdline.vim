@@ -37,6 +37,9 @@ if !g:cmdline_in_buffer
 endif
 
 " Set other options
+if !exists("g:cmdline_ipyhton")
+    let g:cmdline_ipyhton = 0 
+endif
 if !exists("g:cmdline_vsplit")
     let g:cmdline_vsplit = 0
 endif
