@@ -1,3 +1,8 @@
+" Ensure that plugin/vimcmdline.vim was sourced
+if !exists("g:cmdline_job")
+    runtime plugin/vimcmdline.vim
+endif
+
 function! PythonSourceLines(lines)
     call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
 endfunction

@@ -1,3 +1,7 @@
+" Ensure that plugin/vimcmdline.vim was sourced
+if !exists("g:cmdline_job")
+    runtime plugin/vimcmdline.vim
+endif
 
 function! PrologSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.pl")
