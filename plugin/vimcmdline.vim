@@ -29,13 +29,6 @@ else
     let g:cmdline_in_buffer = 0
 endif
 
-" Check if Tmux is running
-if !g:cmdline_in_buffer
-    if $TMUX == ""
-        finish
-    endif
-endif
-
 " Set other options
 if !exists("g:cmdline_vsplit")
     let g:cmdline_vsplit = 0
@@ -129,6 +122,14 @@ endfunction
 
 " Run the interpreter in a Tmux panel
 function VimCmdLineStart_Tmux(app)
+    " Check if Tmux is running
+    if $TMUX == ""
+        echohl WarningMsg
+        echomsg "Cannot start interpreter because not inside a Tmux session."
+        echohl Normal
+        return
+    endif
+
     let g:cmdline_vim_pane = GetTmuxActivePane()
     let tcmd = "tmux split-window "
     if g:cmdline_vsplit
