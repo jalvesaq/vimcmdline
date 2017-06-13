@@ -3,14 +3,25 @@ if !exists("g:cmdline_job")
     runtime plugin/vimcmdline.vim
 endif
 
-function! PythonSourceLines(lines)
-    if exists("g:cmdline_app")
-        for key in keys(g:cmdline_app)
-            if key == "python" && g:cmdline_app["python"] == "ipython"
-                call VimCmdLineSendCmd("%cpaste")
-                call VimCmdLineSendCmd(join(add(a:lines, '--'), b:cmdline_nl))
+if exists("g:cmdline_app")
+    for key in keys(g:cmdline_app)
+        if key == "python" && g:cmdline_app["python"] == "ipython" 
+            if has("nvim") && g:cmdline_in_buffer == 1
+                echohl WarningMsg
+                echomsg "vimcmdline does not support ipython in builtin terminal emulator"
+                sleep 3
+                echohl Normal
+            else 
+                let b:cmdline_ipython = 1
             endif
-        endfor
+        endif
+    endfor
+endif
+
+function! PythonSourceLines(lines)
+    if exists("b:cmdline_ipython")
+        call VimCmdLineSendCmd("%cpaste")
+        call VimCmdLineSendCmd(join(add(a:lines, '--'), b:cmdline_nl))
     else
         call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
     endif
