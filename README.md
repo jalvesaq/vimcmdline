@@ -28,6 +28,8 @@ If you are editing one of the supported file types, in Normal mode do:
 
   - `<Space>` to send the current line to the interpreter.
 
+  - `<LocalLeader><Space>` to send the current line to the interpreter and keep the cursor on the current line.
+
   - `<LocalLeader>q` to send the quit command to the interpreter.
 
 For languages that can source chunks of code:
@@ -52,6 +54,7 @@ Below are examples of how to set the options in your `vimrc`:
 " vimcmdline mappings
 let cmdline_map_start          = "<LocalLeader>s"
 let cmdline_map_send           = "<Space>"
+let cmdline_map_send_and_stay  = "<LocalLeader><Space>"
 let cmdline_map_source_fun     = "<LocalLeader>f"
 let cmdline_map_send_paragraph = "<LocalLeader>p"
 let cmdline_map_send_block     = "<LocalLeader>b"

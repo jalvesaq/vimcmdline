@@ -193,6 +193,7 @@ endfunction
 
 function VimCmdLineCreateMaps()
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' :call VimCmdLineSendLine()<CR>'
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_and_stay . ' :call VimCmdLineSendLineAndStay()<CR>'
     if exists("b:cmdline_source_fun")
         exe 'vmap <silent><buffer> ' . g:cmdline_map_send .
                     \ ' <Esc>:call b:cmdline_source_fun(getline("' . "'" . '<", "'. "'". '>"))<CR>'
@@ -273,6 +274,15 @@ function VimCmdLineSendLine()
     endif
     call VimCmdLineSendCmd(line)
     call s:GoLineDown()
+endfunction
+
+" Send current line to the interpreter and but keep cursor on current line
+function VimCmdLineSendLineAndStay()
+    let line = getline(".")
+    if strlen(line) == 0 && b:cmdline_send_empty == 0
+        return
+    endif
+    call VimCmdLineSendCmd(line)
 endfunction
 
 function VimCmdLineSendParagraph()
@@ -373,6 +383,9 @@ if !exists("g:cmdline_map_start")
 endif
 if !exists("g:cmdline_map_send")
     let g:cmdline_map_send = "<Space>"
+endif
+if !exists("g:cmdline_map_send_and_stay")
+    let g:cmdline_map_send_and_stay = "<LocalLeader><Space>"
 endif
 if !exists("g:cmdline_map_source_fun")
     let g:cmdline_map_source_fun = "<LocalLeader>f"
