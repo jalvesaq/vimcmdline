@@ -62,6 +62,9 @@ let g:cmdline_tmuxsname = {"haskell": "", "julia": "", "lisp": "", "matlab": "",
 function s:GoLineDown()
     let i = line(".") + 1
     call cursor(i, 1)
+    if b:cmdline_send_empty
+        return
+    endif
     let curline = substitute(getline("."), '^\s*', "", "")
     let fc = curline[0]
     let lastLine = line("$")
