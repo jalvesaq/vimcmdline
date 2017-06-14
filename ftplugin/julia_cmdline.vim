@@ -3,7 +3,7 @@ if !exists("g:cmdline_job")
     runtime plugin/vimcmdline.vim
 endif
 
-function JuliaSourceLines(lines)
+function! JuliaSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.jl")
     call VimCmdLineSendCmd('include("' . g:cmdline_tmp_dir . '/lines.jl")')
 endfunction
