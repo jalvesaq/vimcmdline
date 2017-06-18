@@ -130,7 +130,7 @@ application in a tmux session. Note that `gnome-terminal` does not require an
 
 ## See also
 
-Plugins with similar functionality are [neoterm] and [vim-slime].
+Plugins with similar functionality are [neoterm], [vim-slime] and [repl.nvim].
 
 [neoterm]: https://github.com/kassio/neoterm
 [Vim]: http://www.vim.org
@@ -140,4 +140,4 @@ Plugins with similar functionality are [neoterm] and [vim-slime].
 [Vim-Plug]: https://github.com/junegunn/vim-plug
 [Neobundle]: https://github.com/Shougo/neobundle.vim
 [vim-slime]: https://github.com/jpalardy/vim-slime
-
+[repl.nvim]: https://gitlab.com/HiPhish/repl.nvim
