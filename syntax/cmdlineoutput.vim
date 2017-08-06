@@ -5,7 +5,7 @@
 
 if exists("b:current_syntax")
     finish
-endif 
+endif
 
 " Normal text
 syn match cmdlineNormal "."
@@ -21,7 +21,7 @@ syn match cmdlineInteger "\<\d\+[Ee]+\=\d\+L"
 " number with no fractional part or exponent
 syn match cmdlineNumber "\<\d\+\>"
 syn match cmdlineNegNum "-\<\d\+\>"
-" hexadecimal number 
+" hexadecimal number
 syn match cmdlineNumber "\<0x\([0-9]\|[a-f]\|[A-F]\)\+"
 
 " floating point number with integer and fractional parts and optional exponent
