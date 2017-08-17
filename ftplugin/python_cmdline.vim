@@ -5,19 +5,26 @@ endif
 
 if exists("g:cmdline_app")
     for key in keys(g:cmdline_app)
-        if key == "python" && g:cmdline_app["python"] == "ipython"
-            let g:cmdline_app["python"] = "python"
-            echohl WarningMsg
-            echomsg "vimcmdline does not support ipython"
-            echohl Normal
-            sleep 3
-            break
+        if key == "python" && match(g:cmdline_app["python"], "ipython") != -1
+            if has("nvim") && g:cmdline_in_buffer == 1
+                echohl WarningMsg
+                echomsg "vimcmdline does not support ipython in builtin terminal emulator"
+                sleep 3
+                echohl Normal
+            else 
+                let b:cmdline_ipython = 1
+            endif
         endif
     endfor
 endif
 
 function! PythonSourceLines(lines)
-    call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
+    if exists("b:cmdline_ipython")
+        call VimCmdLineSendCmd("%cpaste")
+        call VimCmdLineSendCmd(join(add(a:lines, '--'), b:cmdline_nl))
+    else
+        call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
+    endif
 endfunction
 
 let b:cmdline_nl = "\n"
