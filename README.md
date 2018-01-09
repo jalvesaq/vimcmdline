@@ -1,23 +1,24 @@
 # vimcmdline: Send lines to interpreter
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
-interpreter (REPL application). Supported file types are Haskell, Julia, Lisp,
-Matlab, Prolog, Python, Ruby, JavaScript and sh. The interpreter may run in a
-Neovim built-in terminal, an external terminal emulator or in a tmux pane. The
-main advantage of running the interpreter in a Neovim terminal is that the
-output is colorized, as in the screenshot below, where we have different colors
-for general output, positive and negative numbers, and the prompt line:
+interpreter (REPL application). Supported file types are Haskell, JavaScript,
+Julia, Lisp, Matlab, Prolog, Python, Ruby, and sh. The interpreter may
+run in a Neovim built-in terminal (Neovim buffer), an external terminal
+emulator or in a tmux pane. The main advantage of running the interpreter in a
+Neovim terminal is that the output is colorized, as in the screenshot below,
+where we have different colors for general output, positive and negative
+numbers, and the prompt line:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
 If running in either a Neovim buitin terminal or a external terminal, the
 plugin runs one instance of the REPL application for each file type. If
-running in tmux pane, it runs one REPL application for Vim instance.
+running in a tmux pane, it runs one REPL application for Vim instance.
 
 ## How to install
 
 Copy the directories `ftplugin`, `plugin` and `syntax` and their files to your
-`~/.vim` or `~/.config/nvim` directory, or use a plugin manager like
+`~/.vim` or `~/.config/nvim` directory, or use a plugin manager such as
 [Vim-Plug], [Vundle], [Pathogen], [Neobundle], or other.
 
 ## Usage
@@ -42,7 +43,7 @@ For languages that can source chunks of code:
 
     - `<LocalLeader>p` to send from the line to the end of paragraph.
 
-    - `<LocalLeader>b` to send block of code between two closest marks.
+    - `<LocalLeader>b` to send block of code between the two closest marks.
 
     - `<LocalLeader>f` to send the entire file to the interpreter.
 
@@ -52,22 +53,22 @@ Below are examples of how to set the options in your `vimrc`:
 
 ```vim
 " vimcmdline mappings
-let cmdline_map_start          = "<LocalLeader>s"
-let cmdline_map_send           = "<Space>"
-let cmdline_map_send_and_stay  = "<LocalLeader><Space>"
-let cmdline_map_source_fun     = "<LocalLeader>f"
-let cmdline_map_send_paragraph = "<LocalLeader>p"
-let cmdline_map_send_block     = "<LocalLeader>b"
-let cmdline_map_quit           = "<LocalLeader>q"
+let cmdline_map_start          = '<LocalLeader>s'
+let cmdline_map_send           = '<Space>'
+let cmdline_map_send_and_stay  = '<LocalLeader><Space>'
+let cmdline_map_source_fun     = '<LocalLeader>f'
+let cmdline_map_send_paragraph = '<LocalLeader>p'
+let cmdline_map_send_block     = '<LocalLeader>b'
+let cmdline_map_quit           = '<LocalLeader>q'
 
 " vimcmdline options
-let cmdline_vsplit             = 1      " Split the window vertically
-let cmdline_esc_term           = 1      " Remap <Esc> to :stopinsert in Neovim terminal
-let cmdline_in_buffer          = 1      " Start the interpreter in a Neovim buffer
-let cmdline_term_height        = 15     " Initial height of interpreter window or pane
-let cmdline_term_width         = 80     " Initial width of interpreter window or pane
-let cmdline_tmp_dir            = '/tmp' " Temporary directory to save files
-let cmdline_outhl              = 1      " Syntax highlight the output
+let cmdline_vsplit      = 1      " Split the window vertically
+let cmdline_esc_term    = 1      " Remap <Esc> to :stopinsert in Neovim's terminal
+let cmdline_in_buffer   = 1      " Start the interpreter in a Neovim's terminal
+let cmdline_term_height = 15     " Initial height of interpreter window or pane
+let cmdline_term_width  = 80     " Initial width of interpreter window or pane
+let cmdline_tmp_dir     = '/tmp' " Temporary directory to save files
+let cmdline_outhl       = 1      " Syntax highlight the output
 ```
 
 You can also define what application will be run as interpreter for each
@@ -77,18 +78,45 @@ value, as in the example below:
 
 ```vim
 let cmdline_app           = {}
-let cmdline_app["python"] = "ptipython3"
-let cmdline_app["ruby"]   = "pry"
-let cmdline_app["sh"]     = "bash"
+let cmdline_app['python'] = 'ptipython3'
+let cmdline_app['ruby']   = 'pry'
+let cmdline_app['sh']     = 'bash'
 ```
 
 If you are using Neovim, you can use its syntax highlight capabilities to
 colorize the interpreter output, and you can customize the colors in your
-`vimrc`. The example of customization below is for a terminal emulator that
-supports 256 colors (see in Neovim `:h highlight-ctermfg`):
+`vimrc` in three different ways:
+
+  1. The hex code of the foreground color.
+
+  2. The ANSI number of the foreground color.
+
+  3. The complete highlighting specification.
+
+The example of customization below will work if either your editor supports
+true colors or if it supports 256 colors (see in Neovim `:h tui-colors`):
 
 ```vim
-if &t_Co == 256
+if has('gui_running') || &termguicolors
+    let cmdline_color_input    = '#9e9e9e'
+    let cmdline_color_normal   = '#00afff'
+    let cmdline_color_number   = '#00ffff'
+    let cmdline_color_integer  = '#00ffff'
+    let cmdline_color_float    = '#00ffff'
+    let cmdline_color_complex  = '#00ffff'
+    let cmdline_color_negnum   = '#d7afff'
+    let cmdline_color_negfloat = '#d7afff'
+    let cmdline_color_date     = '#00d7af'
+    let cmdline_color_true     = '#5fd787'
+    let cmdline_color_false    = '#ff5f5f'
+    let cmdline_color_inf      = '#00afff'
+    let cmdline_color_constant = '#5fafff'
+    let cmdline_color_string   = '#5fd7af'
+    let cmdline_color_stderr   = '#0087ff'
+    let cmdline_color_error    = '#ff0000'
+    let cmdline_color_warn     = '#c0ffff'
+    let cmdline_color_index    = '#d7d787'
+elseif &t_Co == 256
     let cmdline_color_input    = 247
     let cmdline_color_normal   =  39
     let cmdline_color_number   =  51
@@ -110,14 +138,22 @@ if &t_Co == 256
 endif
 ```
 
+And the next example sets the value of an option as the complete highlighting
+specification.
+
+```vim
+let cmdline_color_error = 'ctermfg=1 ctermbg=15 guifg=#c00000 guibg=#ffffff gui=underline term=underline'
+```
+
 If you prefer that the output is highlighted using you current `colorscheme`,
 put in your `vimrc`:
 
 ```vim
 let cmdline_follow_colorscheme = 1
 ```
+
 Finally, if you want to run the interpreter in an external terminal emulator,
-you have to define the command run it, as in the examples below:
+you have to define the command to run it, as in the examples below:
 
 ```vim
 let cmdline_external_term_cmd = "gnome-terminal -e '%s'"
