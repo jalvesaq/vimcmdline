@@ -86,97 +86,43 @@ if exists('g:cmdline_follow_colorscheme') && g:cmdline_follow_colorscheme
     finish
 endif
 
-" Either GUI running or 'termguicolors'
-hi cmdlineInput	guifg=#9e9e9e
-hi cmdlineNormal	guifg=#00d700
-hi cmdlineNumber	guifg=#ffaf00
-hi cmdlineInteger	guifg=#ffaf00
-hi cmdlineFloat	guifg=#ffaf00
-hi cmdlineComplex	guifg=#ffaf00
-hi cmdlineNegNum	guifg=#ff875f
-hi cmdlineNegFlt	guifg=#ff875f
-hi cmdlineDate	guifg=#d7af5f
-hi cmdlineFalse	guifg=#ff5f5f
-hi cmdlineTrue	guifg=#5fd787
-hi cmdlineInf	guifg=#00afff
-hi cmdlineConst	guifg=#00af5f
-hi cmdlineString	guifg=#5fffaf
-hi cmdlineError	guifg=#ffffff guibg=#c00000
-hi cmdlineWarn	guifg=#c00000
-hi cmdlineIndex	guifg=#87afaf
-
-if &t_Co == 256
-    hi cmdlineInput	ctermfg=247
-    hi cmdlineNormal	ctermfg=40
-    hi cmdlineNumber	ctermfg=214
-    hi cmdlineInteger	ctermfg=214
-    hi cmdlineFloat	ctermfg=214
-    hi cmdlineComplex	ctermfg=214
-    hi cmdlineNegNum	ctermfg=209
-    hi cmdlineNegFlt	ctermfg=209
-    hi cmdlineDate	ctermfg=179
-    hi cmdlineFalse	ctermfg=203
-    hi cmdlineTrue	ctermfg=78
-    hi cmdlineInf	ctermfg=39
-    hi cmdlineConst	ctermfg=35
-    hi cmdlineString	ctermfg=85
-    hi cmdlineError	ctermfg=15 ctermbg=1
-    hi cmdlineWarn	ctermfg=1
-    hi cmdlineIndex	ctermfg=109
-else
-    hi cmdlineInput	ctermfg=gray
-    hi cmdlineNormal	ctermfg=darkgreen
-    hi cmdlineNumber	ctermfg=darkyellow
-    hi cmdlineInteger	ctermfg=darkyellow
-    hi cmdlineFloat	ctermfg=darkyellow
-    hi cmdlineComplex	ctermfg=darkyellow
-    hi cmdlineNegNum	ctermfg=darkyellow
-    hi cmdlineNegFlt	ctermfg=darkyellow
-    hi cmdlineDate	ctermfg=darkyellow
-    hi cmdlineInf	ctermfg=darkyellow
-    hi cmdlineFalse	ctermfg=magenta
-    hi cmdlineTrue	ctermfg=darkgreen
-    hi cmdlineConst	ctermfg=magenta
-    hi cmdlineString	ctermfg=darkcyan
-    hi cmdlineError	ctermfg=white ctermbg=red
-    hi cmdlineWarn	ctermfg=red
-    hi cmdlineIndex	ctermfg=darkgreen
-endif
-
-function s:SetColor(cgroup, hicolor)
-    if exists('g:' . a:hicolor)
-        let hc = get(g:, a:hicolor, '1')
+function s:SetColor(cgroup, hicolor, cgui, c256, c16)
+    if exists('g:cmdline_color_' . a:hicolor)
+        let hc = get(g:, 'cmdline_color_' . a:hicolor, '1')
         if hc =~? '^#[a-f0-9]\{6}$'
-            let g:TheHiCmdGUI = 'hi ' . a:cgroup . ' guifg=' . hc
-            exe 'hi ' . a:cgroup . ' guifg=' . hc
+            exe 'hi cmdline' . a:cgroup . ' guifg=' . hc
         elseif hc =~# '^[0-9]*$'
-            let g:TheHiCmdTerm = 'hi ' . a:cgroup . ' ctermfg=' . hc
-            exe 'hi ' . a:cgroup . ' ctermfg=' . hc
+            exe 'hi cmdline' . a:cgroup . ' ctermfg=' . hc
         else
-            let g:TheHiCmd = 'hi ' . a:cgroup . ' ' . hc
-            exe 'hi ' . a:cgroup . ' ' . hc
+            exe 'hi cmdline' . a:cgroup . ' ' . hc
+        endif
+    else
+        if &t_Co == 256
+            exe 'hi cmdline' . a:cgroup . ' ctermfg=' . a:c256 . ' guifg=' . a:cgui
+        else
+            exe 'hi cmdline' . a:cgroup . ' ctermfg=' . a:c16  . ' guifg=' . a:cgui
         endif
     endif
 endfunction
 
 " Change colors under user request:
-call s:SetColor('cmdlineInput',   'cmdline_color_input')
-call s:SetColor('cmdlineNormal',  'cmdline_color_normal')
-call s:SetColor('cmdlineNumber',  'cmdline_color_number')
-call s:SetColor('cmdlineInteger', 'cmdline_color_integer')
-call s:SetColor('cmdlineFloat',   'cmdline_color_float')
-call s:SetColor('cmdlineComplex', 'cmdline_color_complex')
-call s:SetColor('cmdlineNegNum',  'cmdline_color_negnum')
-call s:SetColor('cmdlineNegFlt',  'cmdline_color_negfloat')
-call s:SetColor('cmdlineDate',    'cmdline_color_date')
-call s:SetColor('cmdlineFalse',   'cmdline_color_false')
-call s:SetColor('cmdlineTrue',    'cmdline_color_true')
-call s:SetColor('cmdlineInf',     'cmdline_color_inf')
-call s:SetColor('cmdlineConst',   'cmdline_color_constant')
-call s:SetColor('cmdlineString',  'cmdline_color_string')
-call s:SetColor('cmdlineError',   'cmdline_color_error')
-call s:SetColor('cmdlineWarn',    'cmdline_color_warn')
-call s:SetColor('cmdlineIndex',   'cmdline_color_index')
+call s:SetColor('Input',   'input',    '#9e9e9e',               '247',          'gray')
+call s:SetColor('Normal',  'normal',   '#00d700',               '40',           'darkgreen')
+call s:SetColor('Number',  'number',   '#ffaf00',               '214',          'darkyellow')
+call s:SetColor('Integer', 'integer',  '#ffaf00',               '214',          'darkyellow')
+call s:SetColor('Float',   'float',    '#ffaf00',               '214',          'darkyellow')
+call s:SetColor('Complex', 'complex',  '#ffaf00',               '214',          'darkyellow')
+call s:SetColor('NegNum',  'negnum',   '#ff875f',               '209',          'darkyellow')
+call s:SetColor('NegFlt',  'negfloat', '#ff875f',               '209',          'darkyellow')
+call s:SetColor('Date',    'date',     '#d7af5f',               '179',          'darkyellow')
+call s:SetColor('False',   'false',    '#ff5f5f',               '203',          'darkyellow')
+call s:SetColor('True',    'true',     '#5fd787',               '78',           'magenta')
+call s:SetColor('Inf',     'inf',      '#00afff',               '39',           'darkgreen')
+call s:SetColor('Const',   'constant', '#00af5f',               '35',           'magenta')
+call s:SetColor('String',  'string',   '#5fffaf',               '85',           'darkcyan')
+call s:SetColor('Error',   'error',    '#ffffff guibg=#c00000', '15 ctermbg=1', 'white ctermbg=red')
+call s:SetColor('Warn',    'warn',     '#c00000',               '1',            'red')
+call s:SetColor('Index',   'index',    '#87afaf',               '109',          'darkgreen')
 
 let   b:current_syntax = 'cmdline'
 
