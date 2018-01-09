@@ -124,6 +124,8 @@ call s:SetColor('Error',   'error',    '#ffffff guibg=#c00000', '15 ctermbg=1', 
 call s:SetColor('Warn',    'warn',     '#c00000',               '1',            'red')
 call s:SetColor('Index',   'index',    '#87afaf',               '109',          'darkgreen')
 
+delfunction s:SetColor
+
 let   b:current_syntax = 'cmdline'
 
 " vim: ts=8 sw=4
