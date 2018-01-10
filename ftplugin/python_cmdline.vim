@@ -22,7 +22,11 @@ function! PythonSourceLines(lines)
 endfunction
 
 let b:cmdline_nl = "\n"
-let b:cmdline_app = "python"
+if executable("python3")
+    let b:cmdline_app = "python3"
+else
+    let b:cmdline_app = "python"
+endif
 let b:cmdline_quit_cmd = "quit()"
 let b:cmdline_source_fun = function("PythonSourceLines")
 let b:cmdline_send_empty = 1
