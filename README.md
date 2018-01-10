@@ -164,6 +164,11 @@ where `%s` will be replaced with the terminal command required to run the REPL
 application in a tmux session. Note that `gnome-terminal` does not require an
 `&` at the end of the command because it forks immediately after startup.
 
+Your `~/.inputrc` should not include `set keymap vi` because it would cause
+some applications to start in vi's edit mode. Then, you would always have to
+press either `a` or `i` in the interpreter console before using it.
+
+
 ## See also
 
 Plugins with similar functionality are [neoterm], [vim-slime] and [repl.nvim].
