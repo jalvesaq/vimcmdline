@@ -5,8 +5,12 @@ endif
 
 if exists("g:cmdline_app")
     for key in keys(g:cmdline_app)
-        if key == "python" && match(g:cmdline_app["python"], "ipython") != -1
-            let b:cmdline_ipython = 1
+        if key == "python"
+	    if match(g:cmdline_app["python"], "ipython") != -1
+	        let b:cmdline_ipython = 1
+	    elseif match(g:cmdline_app["python"], "jupyter") != -1
+	        let b:cmdline_jupyter = 1
+	    endif
         endif
     endfor
 endif
@@ -16,6 +20,19 @@ function! PythonSourceLines(lines)
         call VimCmdLineSendCmd("%cpaste -q")
         sleep 100m " Wait for IPython to read stdin
         call VimCmdLineSendCmd(join(add(a:lines, '--'), b:cmdline_nl))
+    elseif exists("b:cmdline_jupyter")
+	" Use bracketed paste
+	let a:block = join(a:lines, b:cmdline_nl)
+python << endpython
+# Allow inner blocks to be run without problem (cpaste-like)
+import textwrap, json
+block = vim.eval('a:block')
+vim.command('let a:block = %s' % json.dumps(textwrap.dedent(block)))
+endpython
+	call VimCmdLineSendCmd("\e[200~")
+        call VimCmdLineSendCmd(a:block)
+        call VimCmdLineSendCmd("\e[201~")
+	call VimCmdLineSendCmd(b:cmdline_nl)
     else
         call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
     endif
