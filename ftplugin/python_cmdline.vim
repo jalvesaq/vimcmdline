@@ -1,3 +1,8 @@
+" skip if filetype is sage.python
+if match(&ft, '\v<sage>') != -1
+    finish
+endif
+
 " Ensure that plugin/vimcmdline.vim was sourced
 if !exists("g:cmdline_job")
     runtime plugin/vimcmdline.vim
