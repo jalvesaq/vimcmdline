@@ -2,7 +2,7 @@
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
 interpreter (REPL application). Supported file types are Golang, Haskell, JavaScript,
-Julia, Jupyter, Lisp, Matlab, Prolog, Python, Ruby, and sh. The interpreter may
+Julia, Jupyter, Lisp, Macaulay2, Matlab, Prolog, Python, Ruby, Sage, and sh. The interpreter may
 run in a Neovim built-in terminal (Neovim buffer), an external terminal
 emulator or in a tmux pane. The main advantage of running the interpreter in a
 Neovim terminal is that the output is colorized, as in the screenshot below,
