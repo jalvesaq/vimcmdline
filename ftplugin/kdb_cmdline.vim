@@ -29,7 +29,7 @@ let b:cmdline_app = "q"
 let b:cmdline_quit_cmd = "\\\\"
 let b:cmdline_source_fun = function("KdbSourceLines")
 let b:cmdline_send_empty = 1
-let b:cmdline_filetype = "q"
+let b:cmdline_filetype = "kdb"
 
 exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 
