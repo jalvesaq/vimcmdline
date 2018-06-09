@@ -43,7 +43,7 @@ if !exists("g:cmdline_term_height")
     let g:cmdline_term_height = 15
 endif
 if !exists("g:cmdline_tmp_dir")
-    let g:cmdline_tmp_dir = "/tmp/cmdline_" . $USER
+    let g:cmdline_tmp_dir = "/tmp/cmdline_" . localtime() . "_" . $USER
 endif
 if !exists("g:cmdline_outhl")
     let g:cmdline_outhl = 1
