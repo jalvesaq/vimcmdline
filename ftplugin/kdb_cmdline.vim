@@ -35,4 +35,4 @@ exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp(
 
 exe 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.q")'
 
-call VimCmdLineSetApp("q")
+call VimCmdLineSetApp("kdb")
