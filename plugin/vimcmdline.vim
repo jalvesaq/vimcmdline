@@ -43,7 +43,7 @@ if !exists("g:cmdline_term_height")
     let g:cmdline_term_height = 15
 endif
 if !exists("g:cmdline_tmp_dir")
-    let g:cmdline_tmp_dir = "/tmp/cmdline_" . $USER
+    let g:cmdline_tmp_dir = "/tmp/cmdline_" . localtime() . "_" . $USER
 endif
 if !exists("g:cmdline_outhl")
     let g:cmdline_outhl = 1
@@ -52,14 +52,14 @@ endif
 " Internal variables
 let g:cmdline_job = {"haskell": 0, "julia": 0, "lisp": 0, "matlab": 0, "go": 0,
             \ "prolog": 0, "python": 0, "ruby": 0, "sh": 0, "javascript": 0,
-            \ "sage": 0, "Macaulay2": 0}
+            \ "sage": 0, "Macaulay2": 0, "kdb":0}
 let g:cmdline_termbuf = {"haskell": "", "julia": "", "lisp": "", "matlab": "", "go": "",
             \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": "",
-            \ "sage": "", "Macaulay2": ""}
+            \ "sage": "", "Macaulay2": "", "kdb": ""}
 let s:cmdline_app_pane = ''
 let g:cmdline_tmuxsname = {"haskell": "", "julia": "", "lisp": "", "matlab": "", "go": "",
             \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": "",
-            \ "sage": "", "Macaulay2": ""}
+            \ "sage": "", "Macaulay2": "", "kdb": ""}
 
 " Skip empty lines
 function s:GoLineDown()
