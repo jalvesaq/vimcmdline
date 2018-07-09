@@ -22,32 +22,18 @@ let g:did_cmdline = 1
 
 " Set option
 if has("nvim")
-    if !exists("g:cmdline_in_buffer")
-        let g:cmdline_in_buffer = 1
-    endif
+    let g:cmdline_in_buffer = get(g:, 'cmdline_in_buffer', 1)
 else
     let g:cmdline_in_buffer = 0
 endif
 
 " Set other options
-if !exists("g:cmdline_vsplit")
-    let g:cmdline_vsplit = 0
-endif
-if !exists("g:cmdline_esc_term")
-    let g:cmdline_esc_term = 1
-endif
-if !exists("g:cmdline_term_width")
-    let g:cmdline_term_width = 40
-endif
-if !exists("g:cmdline_term_height")
-    let g:cmdline_term_height = 15
-endif
-if !exists("g:cmdline_tmp_dir")
-    let g:cmdline_tmp_dir = "/tmp/cmdline_" . localtime() . "_" . $USER
-endif
-if !exists("g:cmdline_outhl")
-    let g:cmdline_outhl = 1
-endif
+let g:cmdline_vsplit = get(g:, 'cmdline_vsplit', 0)
+let g:cmdline_esc_term = get(g:, 'cmdline_esc_term', 1)
+let g:cmdline_term_width = get(g:, 'cmdline_term_width', 40)
+let g:cmdline_term_height = get(g:, 'cmdline_term_height', 15)
+let g:cmdline_tmp_dir = get(g:, 'cmdline_tmp_dir', '/tmp/cmdline_' . localtime() . '_' . $USER)
+let g:cmdline_outhl = get(g:, 'cmdline_outhl', 1)
 
 " Internal variables
 let g:cmdline_job = {"haskell": 0, "julia": 0, "lisp": 0, "matlab": 0, "go": 0,
