@@ -1,17 +1,17 @@
 # vimcmdline: Send lines to interpreter
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
-interpreter (REPL application). Supported file types are Golang, Haskell, JavaScript,
-Julia, Jupyter, Lisp, Macaulay2, Matlab, Prolog, Python, Ruby, Sage, and sh. The interpreter may
-run in a Neovim built-in terminal (Neovim buffer), an external terminal
-emulator or in a tmux pane. The main advantage of running the interpreter in a
-Neovim terminal is that the output is colorized, as in the screenshot below,
-where we have different colors for general output, positive and negative
-numbers, and the prompt line:
+interpreter (REPL application). Supported file types are Golang, Haskell,
+JavaScript, Julia, Jupyter, Lisp, Macaulay2, Matlab, Prolog, Python, Ruby,
+Sage, and sh. The interpreter may run in a Neovim built-in terminal (Neovim
+buffer), an external terminal emulator or in a tmux pane. The main advantage
+of running the interpreter in a Neovim terminal is that the output is
+colorized, as in the screenshot below, where we have different colors for
+general output, positive and negative numbers, and the prompt line:
 
 ![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
-If running in either a Neovim built-in terminal or a external terminal, the
+If running in either a Neovim built-in terminal or an external terminal, the
 plugin runs one instance of the REPL application for each file type. If
 running in a tmux pane, it runs one REPL application for Vim instance.
 
@@ -69,6 +69,7 @@ let cmdline_term_height = 15     " Initial height of interpreter window or pane
 let cmdline_term_width  = 80     " Initial width of interpreter window or pane
 let cmdline_tmp_dir     = '/tmp' " Temporary directory to save files
 let cmdline_outhl       = 1      " Syntax highlight the output
+let cmdline_auto_scroll = 1      " Keep the cursor at the end of terminal (nvim)
 ```
 
 You can also define what application will be run as interpreter for each
