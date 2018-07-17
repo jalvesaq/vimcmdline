@@ -34,6 +34,7 @@ let g:cmdline_term_width = get(g:, 'cmdline_term_width', 40)
 let g:cmdline_term_height = get(g:, 'cmdline_term_height', 15)
 let g:cmdline_tmp_dir = get(g:, 'cmdline_tmp_dir', '/tmp/cmdline_' . localtime() . '_' . $USER)
 let g:cmdline_outhl = get(g:, 'cmdline_outhl', 1)
+let g:cmdline_auto_scroll = get(g:, 'cmdline_auto_scroll', 1)
 
 " Internal variables
 let g:cmdline_job = {"haskell": 0, "julia": 0, "lisp": 0, "matlab": 0, "go": 0,
@@ -226,6 +227,16 @@ endfunction
 " Send a single line to the interpreter
 function VimCmdLineSendCmd(...)
     if g:cmdline_job[b:cmdline_filetype]
+        if g:cmdline_auto_scroll && (!exists('b:cmdline_quit_cmd') || a:1 != b:cmdline_quit_cmd)
+            let isnormal = mode() ==# 'n'
+            let curwin = winnr()
+            exe "sb " . g:cmdline_termbuf[b:cmdline_filetype]
+            call cursor('$', 1)
+            exe curwin . 'wincmd w'
+            if isnormal
+                stopinsert
+            endif
+        endif
         call jobsend(g:cmdline_job[b:cmdline_filetype], a:1 . b:cmdline_nl)
     else
         let str = substitute(a:1, "'", "'\\\\''", "g")
