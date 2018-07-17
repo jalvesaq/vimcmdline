@@ -49,7 +49,7 @@ let g:cmdline_tmuxsname = {"haskell": "", "julia": "", "lisp": "", "matlab": "",
             \ "sage": "", "Macaulay2": "", "kdb": ""}
 
 " Skip empty lines
-function s:GoLineDown()
+function VimCmdLineDown()
     let i = line(".") + 1
     call cursor(i, 1)
     if b:cmdline_send_empty
@@ -268,11 +268,15 @@ endfunction
 
 " Send current line to the interpreter and go down to the next non empty line
 function VimCmdLineSendLine()
+    if exists('*b:cmdline_send')
+        call b:cmdline_send()
+        return
+    endif
     let line = getline(".")
     if strlen(line) > 0 || b:cmdline_send_empty
         call VimCmdLineSendCmd(line)
     endif
-    call s:GoLineDown()
+    call VimCmdLineDown()
 endfunction
 
 " Send current line to the interpreter and but keep cursor on current line
