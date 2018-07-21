@@ -11,7 +11,14 @@ endif
 syn match cmdlineNormal "."
 
 " Strings
-syn region cmdlineString start=/"/ skip=/\\\\\|\\"/ end=/"/ end=/$/
+if exists('b:syn_string_delimiter')
+    for dlmtr in b:syn_string_delimiter
+        exe 'syn region cmdlineString start=/' . dlmtr . '/ skip=/\\\\\|\\'
+                    \ . dlmtr . '/ end=/' . dlmtr . '/ end=/$/'
+    endfor
+else
+    syn region cmdlineString start=/"/ skip=/\\\\\|\\"/ end=/"/ end=/$/
+endif
 
 " integer
 syn match cmdlineInteger "\<\d\+L"
