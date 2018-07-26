@@ -69,7 +69,11 @@ function! PythonSendLine()
     call VimCmdLineDown()
 endfunction
 
-let b:cmdline_nl = "\n"
+if has("win32")
+    let b:cmdline_nl = "\r\n"
+else
+    let b:cmdline_nl = "\n"
+endif
 if executable("python3")
     let b:cmdline_app = "python3"
 else
