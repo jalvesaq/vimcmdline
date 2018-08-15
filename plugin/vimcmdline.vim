@@ -237,7 +237,11 @@ function VimCmdLineSendCmd(...)
                 stopinsert
             endif
         endif
-        call jobsend(g:cmdline_job[b:cmdline_filetype], a:1 . b:cmdline_nl)
+        if exists('*chansend')
+            call chansend(g:cmdline_job[b:cmdline_filetype], a:1 . b:cmdline_nl)
+        else
+            call jobsend(g:cmdline_job[b:cmdline_filetype], a:1 . b:cmdline_nl)
+        endif
     else
         let str = substitute(a:1, "'", "'\\\\''", "g")
         if str =~ '^-'
