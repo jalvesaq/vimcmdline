@@ -8,11 +8,7 @@ function! JuliaSourceLines(lines)
     call VimCmdLineSendCmd('include("' . g:cmdline_tmp_dir . '/lines.jl")')
 endfunction
 
-if has('win32')
-    let b:cmdline_nl = "\r\n"
-else
-    let b:cmdline_nl = "\n"
-endif
+let b:cmdline_nl = "\n"
 let b:cmdline_app = "julia"
 let b:cmdline_quit_cmd = "quit()"
 let b:cmdline_source_fun = function("JuliaSourceLines")
