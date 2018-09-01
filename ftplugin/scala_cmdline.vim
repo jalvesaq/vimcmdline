@@ -5,7 +5,7 @@ endif
 
 function! ScalaSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.scala")
-    call VimCmdLineSendCmd(':load "' . g:cmdline_tmp_dir . '/lines.scala")')
+    call VimCmdLineSendCmd(':load "' . g:cmdline_tmp_dir . '/lines.scala"')
 endfunction
 
 let b:cmdline_nl = "\n"
