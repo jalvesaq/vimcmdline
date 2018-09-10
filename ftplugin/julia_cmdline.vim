@@ -10,7 +10,7 @@ endfunction
 
 let b:cmdline_nl = "\n"
 let b:cmdline_app = "julia"
-let b:cmdline_quit_cmd = "quit()"
+let b:cmdline_quit_cmd = "exit()"
 let b:cmdline_source_fun = function("JuliaSourceLines")
 let b:cmdline_send_empty = 0
 let b:cmdline_filetype = "julia"
