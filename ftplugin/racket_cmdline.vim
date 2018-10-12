@@ -5,12 +5,12 @@ endif
 
 function! RacketSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.rkt")
-    call VimCmdLineSendCmd('(load-file "' . g:cmdline_tmp_dir . '/lines.rkt")')
+    call VimCmdLineSendCmd('(load "' . g:cmdline_tmp_dir . '/lines.rkt")')
 endfunction
 
 let b:cmdline_nl = "\n"
 let b:cmdline_app = "racket"
-let b:cmdline_quit_cmd = "(quit)"
+let b:cmdline_quit_cmd = "(exit)"
 let b:cmdline_source_fun = function("RacketSourceLines")
 let b:cmdline_send_empty = 0
 let b:cmdline_filetype = "racket"
