@@ -1,9 +1,10 @@
 # vimcmdline: Send lines to interpreter
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
-interpreter (REPL application). Supported file types are Golang, Haskell,
+interpreter (REPL application). There is support for Clojure, Golang, Haskell,
 JavaScript, Julia, Jupyter, Lisp, Macaulay2, Matlab, Prolog, Python, Ruby,
-Sage, and sh. The interpreter may run in a Neovim built-in terminal (Neovim
+Sage, Scala, and Shell script (see [Nvim-R](https://github.com/jalvesaq/Nvim-R)
+for R support on Vim/Neovim). The interpreter may run in a Neovim built-in terminal (Neovim
 buffer), an external terminal emulator or in a tmux pane. The main advantage
 of running the interpreter in a Neovim terminal is that the output is
 colorized, as in the screenshot below, where we have different colors for
