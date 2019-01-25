@@ -5,6 +5,7 @@ endif
 
 function! JavaScriptSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.js")
+    call VimCmdLineSendCmd("delete require.cache[require.resolve('" . g.cmdline_tmp_dir . "/lines.js')]")
     call VimCmdLineSendCmd("require('" . g:cmdline_tmp_dir . "/lines.js')")
 endfunction
 
