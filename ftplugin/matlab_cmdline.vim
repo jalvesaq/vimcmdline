@@ -6,7 +6,7 @@ endif
 function! OctaveSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.m")
     if b:cmdline_app =~? "^matlab"
-        call VimCmdLineSendCmd('run("' . g:cmdline_tmp_dir . '/lines.m");')
+        call VimCmdLineSendCmd('run("' . g:cmdline_tmp_dir . '/lines.m"); clear lines.m;')
     else
         call VimCmdLineSendCmd('source("' . g:cmdline_tmp_dir . '/lines.m");')
     endif
