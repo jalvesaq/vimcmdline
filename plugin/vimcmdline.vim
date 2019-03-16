@@ -37,19 +37,19 @@ let g:cmdline_outhl = get(g:, 'cmdline_outhl', 1)
 let g:cmdline_auto_scroll = get(g:, 'cmdline_auto_scroll', 1)
 
 " Internal variables
-let g:cmdline_job = {"haskell": 0, "julia": 0, "lisp": 0, "matlab": 0, "go": 0,
-            \ "prolog": 0, "python": 0, "ruby": 0, "sh": 0, "javascript": 0,
-            \ "sage": 0, "Macaulay2": 0, "kdb": 0, "clojure": 0, "scala": 0,
-            \ "swift": 0}
-let g:cmdline_termbuf = {"haskell": "", "julia": "", "lisp": "", "matlab": "", "go": "",
-            \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": "",
-            \ "sage": "", "Macaulay2": "", "kdb": "", "clojure": "", "scala": "",
-            \ "swift": ""}
+let g:cmdline_job = {}
+let g:cmdline_termbuf = {}
+let g:cmdline_tmuxsname = {}
+let s:ftlist = split(glob(expand('<sfile>:h:h') . '/ftplugin/*'))
+call map(s:ftlist, "substitute(v:val, '.*/\\(.*\\)_.*', '\\1', '')")
+for s:ft in s:ftlist
+    let g:cmdline_job[s:ft] = 0
+    let g:cmdline_termbuf[s:ft] = ''
+    let g:cmdline_tmuxsname[s:ft] = ''
+endfor
+unlet s:ftlist
+unlet s:ft
 let s:cmdline_app_pane = ''
-let g:cmdline_tmuxsname = {"haskell": "", "julia": "", "lisp": "", "matlab": "", "go": "",
-            \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": "",
-            \ "sage": "", "Macaulay2": "", "kdb": "", "clojure": "", "scala": "",
-            \ "swift": ""}
 
 " Skip empty lines
 function VimCmdLineDown()
