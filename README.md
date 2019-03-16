@@ -1,16 +1,17 @@
 # vimcmdline: Send lines to interpreter
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
-interpreter (REPL application). There is support for Clojure, Golang, Haskell,
-JavaScript, Julia, Jupyter, Lisp, Macaulay2, Matlab, Prolog, Python, Ruby,
-Sage, Scala, and Shell script (see [Nvim-R](https://github.com/jalvesaq/Nvim-R)
-for R support on Vim/Neovim). The interpreter may run in a Neovim built-in terminal (Neovim
+interpreter (REPL application). There is support for
+Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Lisp, Macaulay2, Matlab,
+Prolog, Python, Ruby, Sage, Scala, Shell script, and Swift
+(see [Nvim-R](https://github.com/jalvesaq/Nvim-R) for R support on
+Vim/Neovim). The interpreter may run in a Neovim built-in terminal (Neovim
 buffer), an external terminal emulator or in a tmux pane. The main advantage
 of running the interpreter in a Neovim terminal is that the output is
 colorized, as in the screenshot below, where we have different colors for
 general output, positive and negative numbers, and the prompt line:
 
-![nvim_running_octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
+![nvim running octave](https://cloud.githubusercontent.com/assets/891655/7090493/5fba2426-df71-11e4-8eb8-f17668d9361a.png)
 
 If running in either a Neovim built-in terminal or an external terminal, the
 plugin runs one instance of the REPL application for each file type. If
@@ -18,9 +19,9 @@ running in a tmux pane, it runs one REPL application for Vim instance.
 
 ## How to install
 
-Copy the directories `ftplugin`, `plugin` and `syntax` and their files to your
-`~/.vim` or `~/.config/nvim` directory, or use a plugin manager such as
-[Vim-Plug], [Vundle], [Pathogen], [Neobundle], or other.
+Either use a plugin manager such as [Vim-Plug] or copy the directories
+`ftplugin`, `plugin` and `syntax` and their files to your `~/.vim` or
+`~/.config/nvim` directory.
 
 ## Usage
 
@@ -73,7 +74,7 @@ let cmdline_outhl       = 1      " Syntax highlight the output
 let cmdline_auto_scroll = 1      " Keep the cursor at the end of terminal (nvim)
 ```
 
-You can also define what application will be run as interpreter for each
+You can also define what application will be run as the interpreter for each
 supported file type. If you want to do this, create a dictionary called
 `cmdline_app`, and add items with the 'filetype' as key and the interpreter as
 value, as in the example below:
@@ -147,7 +148,7 @@ specification.
 let cmdline_color_error = 'ctermfg=1 ctermbg=15 guifg=#c00000 guibg=#ffffff gui=underline term=underline'
 ```
 
-If you prefer that the output is highlighted using you current `colorscheme`,
+If you prefer that the output is highlighted using your current `colorscheme`,
 put in your `vimrc`:
 
 ```vim
@@ -170,6 +171,34 @@ Your `~/.inputrc` should not include `set keymap vi` because it would cause
 some applications to start in vi's edit mode. Then, you would always have to
 press either `a` or `i` in the interpreter console before using it.
 
+## How to add support for a new language
+
+  1. Look at the Vim scripts in the `ftplugin` directory and make a copy of
+     the script supporting the language closer to the language that you want
+     to support.
+
+  2. Save the new script with the name "filetype\_cmdline.vim" where
+     "filetype" is the output of `echo &filetype` when you are editing a
+     script of the language that you want to support.
+
+  3. Edit the new script and change the values of its variables as necessary.
+
+  4. Test your new file-type script by running your application in either Vim
+     or Neovim and using either the built-in terminal or a Tmux split pane.
+
+  5. Look at the Vim scripts in the `syntax` directory and make a copy of the
+     script supporting the language whose output is closer to the output of
+     the language that you want to support.
+
+  6. Save the new script with the name "cmdlineoutput\_app.vim" where "app" is
+     the name of the interpreter. For example, for the "matlab" file-type, the
+     interpreter is "octave".
+
+  7. Edit the new script and change both the pattern used to recognize the
+     input line and the pattern used to recognize errors.
+
+  8. Test your new syntax highlighting script by running your application in a
+     Neovim built-in terminal.
 
 ## See also
 
@@ -178,9 +207,6 @@ Plugins with similar functionality are [neoterm], [vim-slime] and [repl.nvim].
 [neoterm]: https://github.com/kassio/neoterm
 [Vim]: http://www.vim.org
 [Neovim]: https://github.com/neovim/neovim
-[Vundle]: https://github.com/gmarik/Vundle.vim
-[Pathogen]: https://github.com/tpope/vim-pathogen
 [Vim-Plug]: https://github.com/junegunn/vim-plug
-[Neobundle]: https://github.com/Shougo/neobundle.vim
 [vim-slime]: https://github.com/jpalardy/vim-slime
 [repl.nvim]: https://gitlab.com/HiPhish/repl.nvim
