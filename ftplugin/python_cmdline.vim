@@ -43,6 +43,21 @@ endpython
     endif
 endfunction
 
+if filereadable("vimcmdlinetmp.py")
+    let s:tmppy = 0
+    call VimCmdLineWarn('Please, delete the file "vimcmdlinetmp.py".')
+else
+    let s:tmppy = 1
+    exe 'autocmd VimLeave * call delete("' . expand("%:p:h") . "/vimcmdlinetmp.py" . '")'
+endif
+
+function! PythonSourceLines(lines)
+    if s:tmppy
+        call writefile(a:lines, "vimcmdlinetmp.py")
+        call VimCmdLineSendCmd("from vimcmdlinetmp import *")
+    endif
+endfunction
+
 function! PythonSendLine()
     let line = getline(".")
     if line =~ '^class ' || line =~ '^def '

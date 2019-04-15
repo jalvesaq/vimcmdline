@@ -51,6 +51,16 @@ unlet s:ftlist
 unlet s:ft
 let s:cmdline_app_pane = ''
 
+function VimCmdLineWarn(wmsg)
+    if v:vim_did_enter == 0
+        exe 'autocmd VimEnter * call VimCmdLineWarn("' . escape(a:wmsg, '"') . '")'
+        return
+    endif
+    echohl WarningMsg
+    echomsg a:wmsg
+    echohl None
+endfunction
+
 " Skip empty lines
 function VimCmdLineDown()
     let i = line(".") + 1
