@@ -61,6 +61,7 @@ function! PythonSourceLines(lines)
 
         " Load the py file
         call VimCmdLineSendCmd("import sys")
+        "call VimCmdLineSendCmd("sys.path.append('" . path . "')")
         call VimCmdLineSendCmd("sys.path.append('" . s:path . "')")
         call VimCmdLineSendCmd("import python_cmdline_import")
         " This doesn't work
