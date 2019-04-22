@@ -53,18 +53,24 @@ else
     let s:path = expand('<sfile>:p:h')
 endif
 
+let s:has_loaded_python_cmdline_module = 0
+
 function! PythonSourceLines(lines)
     if s:tmppy
         call writefile(a:lines, "vimcmdlinetmp.py")
         " Folder in which script resides: (not safe for symlinks)
         " Information from https://stackoverflow.com/questions/4976776/how-to-get-path-to-the-current-vimscript-being-executed/18734557
 
-        " Load the py file
-        call VimCmdLineSendCmd("import sys")
-        call VimCmdLineSendCmd("sys.path.append('" . s:path . "')")
-        call VimCmdLineSendCmd("import python_cmdline_import")
-        " This doesn't work
-        " call VimCmdLineSendCmd("importlib.import_module('" . s:path . "/python_cmdline_import')")
+        " Load python_cmdline_import if not already imported
+        if !s:has_loaded_python_cmdline_module
+            call VimCmdLineSendCmd("import sys")
+            call VimCmdLineSendCmd("sys.path.append('" . s:path . "')")
+            call VimCmdLineSendCmd("import python_cmdline_import")
+            " This doesn't work
+            " call VimCmdLineSendCmd("importlib.import_module('" . s:path . "/python_cmdline_import')")
+            
+            let s:has_loaded_python_cmdline_module = 1
+        endif
 
         call VimCmdLineSendCmd("python_cmdline_import.import_and_reload_if_necessary('vimcmdlinetmp')")
         call VimCmdLineSendCmd("from vimcmdlinetmp import *")
