@@ -9,7 +9,10 @@ function! KdbSourceLines(lines)
     call VimCmdLineSendCmd("\\l " . g:cmdline_tmp_dir . "/lines.q")
 endfunction
 
-let b:cmdline_nl = " "
+let b:cmdline_nl = "\n"
+" b:cmdline_app should not be an expression like 'rlwrap q' 
+" to do this create a script, add it to your PATH and set b:cmdlineapp
+" accordingly
 let b:cmdline_app = "q"
 let b:cmdline_quit_cmd = "\\\\"
 let b:cmdline_source_fun = function("KdbSourceLines")
