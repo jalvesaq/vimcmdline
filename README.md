@@ -2,7 +2,7 @@
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
 interpreter (REPL application). There is support for
-Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Lisp, Macaulay2, Matlab,
+Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Kotlin, Lisp, Macaulay2, Matlab,
 Prolog, Python, Ruby, Sage, Scala, Shell script, and Swift
 (see [Nvim-R](https://github.com/jalvesaq/Nvim-R) for R support on
 Vim/Neovim). The interpreter may run in a Neovim built-in terminal (Neovim
@@ -81,7 +81,6 @@ value, as in the example below:
 
 ```vim
 let cmdline_app           = {}
-let cmdline_app['python'] = 'ptipython3'
 let cmdline_app['ruby']   = 'pry'
 let cmdline_app['sh']     = 'bash'
 ```
