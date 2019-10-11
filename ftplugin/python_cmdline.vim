@@ -11,11 +11,11 @@ endif
 if exists("g:cmdline_app")
     for key in keys(g:cmdline_app)
         if key == "python"
-	    if match(g:cmdline_app["python"], "ipython") != -1
-	        let b:cmdline_ipython = 1
-	    elseif match(g:cmdline_app["python"], "jupyter") != -1
-	        let b:cmdline_jupyter = 1
-	    endif
+            if match(g:cmdline_app["python"], "ipython") != -1
+                let b:cmdline_ipython = 1
+            elseif match(g:cmdline_app["python"], "jupyter") != -1
+                let b:cmdline_jupyter = 1
+            endif
         endif
     endfor
 endif
@@ -26,8 +26,8 @@ function! PythonSourceLines(lines)
         sleep 100m " Wait for IPython to read stdin
         call VimCmdLineSendCmd(join(add(a:lines, '--'), b:cmdline_nl))
     elseif exists("b:cmdline_jupyter")
-	" Use bracketed paste
-	call VimCmdLineSendCmd("\e[200~")
+        " Use bracketed paste
+        call VimCmdLineSendCmd("\e[200~")
         call VimCmdLineSendCmd(join(a:lines, b:cmdline_nl))
         call VimCmdLineSendCmd("\e[201~")
     else
