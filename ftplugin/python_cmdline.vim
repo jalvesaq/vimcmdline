@@ -1,4 +1,4 @@
-" skip if filetype is sage.python
+" Skip if filetype is sage.python
 if match(&ft, '\v<sage>') != -1
     finish
 endif
@@ -9,24 +9,18 @@ if !exists("g:cmdline_job")
 endif
 
 if exists("g:cmdline_app")
-    for key in keys(g:cmdline_app)
-        if key == "python"
-            if match(g:cmdline_app["python"], "ipython") != -1
-                let b:cmdline_ipython = 1
-            elseif match(g:cmdline_app["python"], "jupyter") != -1
-                let b:cmdline_jupyter = 1
-            endif
+    if has_key(g:cmdline_app, "python")
+        if match(g:cmdline_app["python"], "ipython") != -1
+            let b:cmdline_ipython = 1
+        elseif match(g:cmdline_app["python"], "jupyter") != -1
+            let b:cmdline_jupyter = 1
         endif
-    endfor
+    endif
 endif
 
 function! PythonSourceLines(lines)
-    if exists("b:cmdline_ipython")
-        call VimCmdLineSendCmd("%cpaste -q")
-        sleep 100m " Wait for IPython to read stdin
-        call VimCmdLineSendCmd(join(add(a:lines, '--'), b:cmdline_nl))
-    elseif exists("b:cmdline_jupyter")
-        " Use bracketed paste
+    if exists("b:cmdline_ipython") || exists("b:cmdline_jupyter")
+        " Use bracketed paste for ipython or jupyter
         call VimCmdLineSendCmd("\e[200~")
         call VimCmdLineSendCmd(join(a:lines, b:cmdline_nl))
         call VimCmdLineSendCmd("\e[201~")
