@@ -43,7 +43,6 @@ let g:cmdline_tmuxsname = {}
 let s:ftlist = split(glob(expand('<sfile>:h:h') . '/ftplugin/*'))
 
 if has('win32')
-    " on windows
     call map(s:ftlist, "substitute(v:val, '.*\\', '', '')")
     call map(s:ftlist, "substitute(v:val, '_cmdline.vim', '', '')")
 else
@@ -104,23 +103,28 @@ function VimCmdLineStart_ExTerm(app)
 
     let g:cmdline_tmuxsname[b:cmdline_filetype] = "vcl" . localtime()
 
-    let cnflines = ['set-option -g prefix C-a',
-                \ 'unbind-key C-b',
-                \ 'bind-key C-a send-prefix',
-                \ 'set-window-option -g mode-keys vi',
-                \ 'set -g status off',
-                \ 'set -g default-terminal "screen-256color"',
-                \ "set -g terminal-overrides 'xterm*:smcup@:rmcup@'" ]
-    if g:cmdline_external_term_cmd =~ "rxvt" || g:cmdline_external_term_cmd =~ "urxvt"
-        let cnflines = cnflines + [
-                    \ "set terminal-overrides 'rxvt*:smcup@:rmcup@'" ]
+    if exists('g:cmdline_tmux_conf')
+        let tconf = expand(g:cmdline_tmux_conf)
+    else
+        let tconf = g:cmdline_tmp_dir . "/tmux.conf"
+        let cnflines = ['set-option -g prefix C-a',
+                    \ 'unbind-key C-b',
+                    \ 'bind-key C-a send-prefix',
+                    \ 'set-window-option -g mode-keys vi',
+                    \ 'set -g status off',
+                    \ 'set -g default-terminal "screen-256color"',
+                    \ "set -g terminal-overrides 'xterm*:smcup@:rmcup@'" ]
+        if g:cmdline_external_term_cmd =~ "rxvt" || g:cmdline_external_term_cmd =~ "urxvt"
+            let cnflines = cnflines + [
+                        \ "set terminal-overrides 'rxvt*:smcup@:rmcup@'" ]
+        endif
+        call writefile(cnflines, tconf)
     endif
-    call writefile(cnflines, g:cmdline_tmp_dir . "/tmux.conf")
 
 
     let cmd = printf(g:cmdline_external_term_cmd,
-                \ 'tmux -2 -f "' . g:cmdline_tmp_dir . '/tmux.conf' .
-                \ '" -L VimCmdLine new-session -s ' . g:cmdline_tmuxsname[b:cmdline_filetype] . ' ' . a:app)
+                \ 'tmux -2 -f "' . tconf . '" -L VimCmdLine new-session -s ' .
+                \ g:cmdline_tmuxsname[b:cmdline_filetype] . ' ' . a:app)
     call system(cmd)
 endfunction
 

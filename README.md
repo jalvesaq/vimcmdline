@@ -78,7 +78,7 @@ let cmdline_auto_scroll = 1      " Keep the cursor at the end of terminal (nvim)
 You can also define what application will be run as the interpreter for each
 supported file type. If you want to do this, create a dictionary called
 `cmdline_app`, and add items with the 'filetype' as key and the interpreter as
-value, as in the example below:
+value, as in the example:
 
 ```vim
 let cmdline_app           = {}
@@ -156,7 +156,7 @@ let cmdline_follow_colorscheme = 1
 ```
 
 Finally, if you want to run the interpreter in an external terminal emulator,
-you have to define the command to run it, as in the examples below:
+you have to define the command to run it, as in the examples:
 
 ```vim
 let cmdline_external_term_cmd = "gnome-terminal -e '%s'"
@@ -166,6 +166,14 @@ let cmdline_external_term_cmd = "xterm -e '%s' &"
 where `%s` will be replaced with the terminal command required to run the REPL
 application in a tmux session. Note that `gnome-terminal` does not require an
 `&` at the end of the command because it forks immediately after startup.
+
+Vimcmdline will generate a tmux.conf for its tmux session. If you rather
+prefer to write and use your own tmux.conf, you should define its path as in
+the example:
+
+```vim
+let cmdline_tmux_conf = "~/vimcmdline_tmux.conf"
+```
 
 Your `~/.inputrc` should not include `set keymap vi` because it would cause
 some applications to start in vi's edit mode. Then, you would always have to
