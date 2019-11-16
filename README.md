@@ -161,11 +161,13 @@ you have to define the command to run it, as in the examples:
 ```vim
 let cmdline_external_term_cmd = "gnome-terminal -e '%s'"
 let cmdline_external_term_cmd = "xterm -e '%s' &"
+let cmdline_external_term_cmd = 'kitty %s &'
 ```
 
 where `%s` will be replaced with the terminal command required to run the REPL
 application in a tmux session. Note that `gnome-terminal` does not require an
-`&` at the end of the command because it forks immediately after startup.
+`&` at the end of the command because it forks immediately after startup and
+that `kitty` only works if `%s` is not between quotation marks.
 
 Vimcmdline will generate a tmux.conf for its tmux session. If you rather
 prefer to write and use your own tmux.conf, you should define its path as in
