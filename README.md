@@ -24,6 +24,14 @@ Either use a plugin manager such as [Vim-Plug] or copy the directories
 `ftplugin`, `plugin` and `syntax` and their files to your `~/.vim` or
 `~/.config/nvim` directory.
 
+You have to install Tmux if you either want to run the interpreter in an
+external terminal emulator or are using Vim.
+
+I have never adapted the plugin to run the interpreter within Vim's built-in
+terminal (as it does in Neovim) because Vim cannot colorize the output printed
+in its terminal.
+
+
 ## Usage
 
 If you are editing one of the supported file types, in Normal mode do:
@@ -169,9 +177,10 @@ application in a tmux session. Note that `gnome-terminal` does not require an
 `&` at the end of the command because it forks immediately after startup and
 that `kitty` only works if `%s` is not between quotation marks.
 
-Vimcmdline will generate a tmux.conf for its tmux session. If you rather
-prefer to write and use your own tmux.conf, you should define its path as in
-the example:
+When running in an external terminal emulator, Vimcmdline requires Tmux to
+work, and generates a tmux.conf for its tmux session. If you rather prefer to
+write and use your own tmux.conf, you should define its path as in the
+example:
 
 ```vim
 let cmdline_tmux_conf = "~/vimcmdline_tmux.conf"
