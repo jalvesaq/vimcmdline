@@ -306,15 +306,23 @@ function VimCmdLineSendLineAndStay()
     endif
 endfunction
 
+function VimCmdLineSelectionToString()
+    try
+        let a_orig = @a
+        silent! normal! gv"ay
+        return @a
+    finally
+        let @a = a_orig
+    endtry
+endfunction
+
 function VimCmdLineSendSelection()
     if line("'<") == line("'>")
-        let i = col("'<") - 1
-        let j = col("'>") - i
-        let l = getline("'<")
-        let line = strpart(l, i, j)
+        let line = VimCmdLineSelectionToString()
         call VimCmdLineSendCmd(line)
     elseif exists("b:cmdline_source_fun")
-        call b:cmdline_source_fun(getline("'<", "'>"))
+        let lines = split(VimCmdLineSelectionToString(), "\n")
+        call b:cmdline_source_fun(lines)
     endif
 endfunction
 
