@@ -76,17 +76,6 @@ function VimCmdLineDown()
     endwhile
 endfunction
 
-" Adapted from screen plugin:
-function GetTmuxActivePane()
-  let line = system("tmux list-panes | grep \'(active)$'")
-  let paneid = matchstr(line, '\v\%\d+ \(active\)')
-  if !empty(paneid)
-    return matchstr(paneid, '\v^\%\d+')
-  else
-    return matchstr(line, '\v^\d+')
-  endif
-endfunction
-
 function VimCmdLineStart_ExTerm(app)
     " Check if the REPL application is already running
     if g:cmdline_tmuxsname[b:cmdline_filetype] != ""
@@ -138,8 +127,7 @@ function VimCmdLineStart_Tmux(app)
         return
     endif
 
-    let g:cmdline_vim_pane = GetTmuxActivePane()
-    let tcmd = "tmux split-window "
+    let tcmd = "tmux split-window -d -t $TMUX_PANE -P -F \"#{pane_id}\" "
     if g:cmdline_vsplit
         if g:cmdline_term_width == -1
             let tcmd .= "-h"
@@ -150,17 +138,12 @@ function VimCmdLineStart_Tmux(app)
         let tcmd .= "-l " . g:cmdline_term_height
     endif
     let tcmd .= " " . a:app
-    let slog = system(tcmd)
+    let paneid = system(tcmd)
     if v:shell_error
-        exe 'echoerr ' . slog
+        exe 'echoerr ' . paneid
         return
     endif
-    let s:cmdline_app_pane = GetTmuxActivePane()
-    let slog = system("tmux select-pane -t " . g:cmdline_vim_pane)
-    if v:shell_error
-        exe 'echoerr ' . slog
-        return
-    endif
+    let s:cmdline_app_pane = paneid
 endfunction
 
 " Run the interpreter in a Neovim terminal buffer
