@@ -393,6 +393,18 @@ function VimCmdLineSetApp(ftype)
     endif
 endfunction
 
+function VimCmdLineLeave()
+    let flist = split(glob(g:cmdline_tmp_dir . '/lines.*'), '\n')
+    for fname in flist
+        call delete(fname)
+    endfor
+    if executable("rmdir")
+        call system("rmdir '" . g:cmdline_tmp_dir . "'")
+    endif
+endfunction
+
+autocmd VimLeave * call VimCmdLineLeave()
+
 " Default mappings
 if !exists("g:cmdline_map_start")
     let g:cmdline_map_start = "<LocalLeader>s"

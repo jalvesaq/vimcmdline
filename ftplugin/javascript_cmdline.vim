@@ -21,6 +21,4 @@ let b:cmdline_filetype = "javascript"
 
 exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 
-exe 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.js")'
-
 call VimCmdLineSetApp("javascript")
