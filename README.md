@@ -167,7 +167,7 @@ Finally, if you want to run the interpreter in an external terminal emulator,
 you have to define the command to run it, as in the examples:
 
 ```vim
-let cmdline_external_term_cmd = "gnome-terminal -e '%s'"
+let cmdline_external_term_cmd = "gnome-terminal -- /bin/bash -c '%s'"
 let cmdline_external_term_cmd = "xterm -e '%s' &"
 let cmdline_external_term_cmd = 'kitty %s &'
 ```
