@@ -5,7 +5,7 @@ interpreter (REPL application). There is support for
 Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Kotlin, Lisp, Macaulay2, Matlab,
 Prolog, Python, Ruby, Sage, Scala, Shell script, Swift and TypeScript
 (see [Nvim-R](https://github.com/jalvesaq/Nvim-R) for R support on
-Vim/Neovim). The interpreter runs in either Neovim or Vim built-in terminal.
+Vim/Neovim). The interpreter runs in Neovim's built-in terminal.
 If Tmux is installed, the interpreter can also run in
 an external terminal emulator or in a tmux pane. The main advantage
 of running the interpreter in a Neovim terminal is that the output is
@@ -17,6 +17,9 @@ general output, positive and negative numbers, and the prompt line:
 If running in either a Neovim built-in terminal or an external terminal, the
 plugin runs one instance of the REPL application for each file type. If
 running in a tmux pane, it runs one REPL application for Vim instance.
+
+Support for running the interpreter in Vim's built-in terminal was not
+implemented.
 
 ## How to install
 

@@ -173,8 +173,8 @@ the interpreter, put in your |vimrc|:
  let cmdline_esc_term = 0
 <
 							   *cmdline_in_buffer*
-The interpreter will be started in the built-in terminal. If you prefer to
-start it in a Tmux split pane, put in your |vimrc|:
+If you are running Neovim, the interpreter will be started in its built-in
+terminal. If you prefer to start it in a Tmux split pane, put in your |vimrc|:
 >
  let cmdline_in_buffer = 0
 <
