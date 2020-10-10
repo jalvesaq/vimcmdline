@@ -63,6 +63,9 @@ For languages that can source chunks of code:
 
     - <LocalLeader>f to send the entire file to the interpreter.
 
+    - <LocalLeader>m to send the text in the following motion to the
+      interpreter. For example <LocalLeader>miw would send the selected word.
+
 Your `~/.inputrc` should not include `set keymap vi` because it would cause
 some applications to start in vi's edit mode. Then, you would always have to
 press either `a` or `i` in the interpreter console before using it.
@@ -83,6 +86,7 @@ Below are examples of how to change the default mappings in your |vimrc|:
  let cmdline_map_source_fun     = '<LocalLeader>f'
  let cmdline_map_send_paragraph = '<LocalLeader>p'
  let cmdline_map_send_block     = '<LocalLeader>b'
+ let cmdline_map_send_motion    = '<LocalLeader>m'
  let cmdline_map_quit           = '<LocalLeader>q'
 <
 							   *vimcmdline_colors*

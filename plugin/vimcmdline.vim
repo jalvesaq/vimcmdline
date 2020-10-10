@@ -183,6 +183,7 @@ endfunction
 function VimCmdLineCreateMaps()
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' :call VimCmdLineSendLine()<CR>'
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send_and_stay . ' :call VimCmdLineSendLineAndStay()<CR>'
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_motion . ' :set opfunc=VimCmdLineSendMotion<CR>g@'
     exe 'vmap <silent><buffer> ' . g:cmdline_map_send .
                 \ ' <Esc>:call VimCmdLineSendSelection()<CR>'
     if exists("b:cmdline_source_fun")
@@ -323,6 +324,30 @@ function VimCmdLineSendParagraph()
     endif
 endfunction
 
+function! VimCmdLineSendMotion(type, ...)
+    let sel_save = &selection
+    let &selection = "inclusive"
+    let reg_save = @@
+
+    if a:0
+        silent exe "normal! gvy"
+    elseif a:type == 'line'
+        silent exe "normal! '[V']y"
+    else
+        silent exe "normal! `[v`]y"
+    endif
+
+    let the_list = []
+    for line in split(@@, "\n")
+        call add(the_list, line)
+    endfor
+
+    call b:cmdline_source_fun(the_list)
+
+    let &selection = sel_save
+    let @@ = reg_save
+endfunction
+
 let s:all_marks = "abcdefghijklmnopqrstuvwxyz"
 
 function VimCmdLineSendMBlock()
@@ -414,6 +439,9 @@ if !exists("g:cmdline_map_send")
 endif
 if !exists("g:cmdline_map_send_and_stay")
     let g:cmdline_map_send_and_stay = "<LocalLeader><Space>"
+endif
+if !exists("g:cmdline_map_send_motion")
+    let g:cmdline_map_send_and_stay = "<LocalLeader>m"
 endif
 if !exists("g:cmdline_map_source_fun")
     let g:cmdline_map_source_fun = "<LocalLeader>f"
