@@ -441,7 +441,7 @@ if !exists("g:cmdline_map_send_and_stay")
     let g:cmdline_map_send_and_stay = "<LocalLeader><Space>"
 endif
 if !exists("g:cmdline_map_send_motion")
-    let g:cmdline_map_send_and_stay = "<LocalLeader>m"
+    let g:cmdline_map_send_motion = "<LocalLeader>m"
 endif
 if !exists("g:cmdline_map_source_fun")
     let g:cmdline_map_source_fun = "<LocalLeader>f"
