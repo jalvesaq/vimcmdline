@@ -6,7 +6,7 @@ endif
 function! MagmaSourceLines(lines)
     "call VimCmdLineSendCmd('%cpaste -q')
     "sleep 100m " Wait for IPython to read stdin
-    call VimCmdLineSendCmd(join(add(a:lines, '--'), b:cmdline_nl))
+    call VimCmdLineSendCmd(join(a:lines, b:cmdline_nl))
 endfunction
 
 let b:cmdline_nl = "\n"
