@@ -208,10 +208,6 @@ function VimCmdLineStartApp()
 
     call VimCmdLineCreateMaps()
 
-    if !isdirectory(g:cmdline_tmp_dir)
-        call mkdir(g:cmdline_tmp_dir)
-    endif
-
     if exists("g:cmdline_external_term_cmd")
         call VimCmdLineStart_ExTerm(b:cmdline_app)
     else

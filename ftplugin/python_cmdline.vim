@@ -39,13 +39,21 @@ endpython
         call VimCmdLineSendCmd("\e[201~")
 	call VimCmdLineSendCmd(b:cmdline_nl)
     else
-        if a:lines[len(a:lines)-1] == ''
-            call VimCmdLineSendCmd(join(a:lines, b:cmdline_nl))
-        else
-            call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
-        endif
+        call VimCmdLineSendCmd(join(add(a:lines, ''), b:cmdline_nl))
     endif
 endfunction
+
+
+function! PythonSourceLines(lines)
+    saveas %:t
+    call VimCmdLineSendCmd("from" . " " . expand('%:r') . " " . "import *")
+    call VimCmdLineSendCmd("import importlib")
+    call VimCmdLineSendCmd("import" . " " . expand('%:r'))
+    call VimCmdLineSendCmd("import os")
+    call VimCmdLineSendCmd("os.system('cls')")
+    call VimCmdLineSendCmd("importlib.reload(" . expand('%:r') . ")")
+endfunction
+
 
 function! PythonSendLine()
     let line = getline(".")
