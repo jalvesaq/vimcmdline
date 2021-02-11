@@ -5,7 +5,11 @@ endif
 
 function! OctaveSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.m")
-    call VimCmdLineSendCmd('source ("' . g:cmdline_tmp_dir . '/lines.m");')
+    if b:cmdline_app =~? "^matlab"
+        call VimCmdLineSendCmd('run("' . g:cmdline_tmp_dir . '/lines.m"); clear lines.m;')
+    else
+        call VimCmdLineSendCmd('source("' . g:cmdline_tmp_dir . '/lines.m");')
+    endif
 endfunction
 
 let b:cmdline_nl = "\n"
@@ -16,7 +20,5 @@ let b:cmdline_send_empty = 0
 let b:cmdline_filetype = "matlab"
 
 exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
-
-exe 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.m")'
 
 call VimCmdLineSetApp("matlab")

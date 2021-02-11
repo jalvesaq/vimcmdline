@@ -17,6 +17,4 @@ let b:cmdline_filetype = "sh"
 
 exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
 
-exe 'autocmd VimLeave * call delete(g:cmdline_tmp_dir . "/lines.sh")'
-
 call VimCmdLineSetApp("sh")

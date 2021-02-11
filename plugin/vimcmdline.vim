@@ -37,19 +37,26 @@ let g:cmdline_outhl = get(g:, 'cmdline_outhl', 1)
 let g:cmdline_auto_scroll = get(g:, 'cmdline_auto_scroll', 1)
 
 " Internal variables
-let g:cmdline_job = {"haskell": 0, "julia": 0, "lisp": 0, "matlab": 0, "go": 0,
-            \ "prolog": 0, "python": 0, "ruby": 0, "sh": 0, "javascript": 0,
-            \ "sage": 0, "Macaulay2": 0, "kdb": 0, "clojure": 0, "scala": 0,
-            \ "racket": 0}
-let g:cmdline_termbuf = {"haskell": "", "julia": "", "lisp": "", "matlab": "", "go": "",
-            \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": "",
-            \ "sage": "", "Macaulay2": "", "kdb": "", "clojure": "", "scala": "",
-            \ "racket": ""}
+let g:cmdline_job = {}
+let g:cmdline_termbuf = {}
+let g:cmdline_tmuxsname = {}
+let s:ftlist = split(glob(expand('<sfile>:h:h') . '/ftplugin/*'))
+
+if has('win32')
+    call map(s:ftlist, "substitute(v:val, '.*\\', '', '')")
+    call map(s:ftlist, "substitute(v:val, '_cmdline.vim', '', '')")
+else
+    call map(s:ftlist, "substitute(v:val, '.*/\\(.*\\)_.*', '\\1', '')")
+endif
+
+for s:ft in s:ftlist
+    let g:cmdline_job[s:ft] = 0
+    let g:cmdline_termbuf[s:ft] = ''
+    let g:cmdline_tmuxsname[s:ft] = ''
+endfor
+unlet s:ftlist
+unlet s:ft
 let s:cmdline_app_pane = ''
-let g:cmdline_tmuxsname = {"haskell": "", "julia": "", "lisp": "", "matlab": "", "go": "",
-            \ "prolog": "", "python": "", "ruby": "", "sh": "", "javascript": "",
-            \ "sage": "", "Macaulay2": "", "kdb": "", "clojure": "", "scala": "",
-            \ "racket": ""}
 
 " Skip empty lines
 function VimCmdLineDown()
@@ -69,17 +76,6 @@ function VimCmdLineDown()
     endwhile
 endfunction
 
-" Adapted from screen plugin:
-function GetTmuxActivePane()
-  let line = system("tmux list-panes | grep \'(active)$'")
-  let paneid = matchstr(line, '\v\%\d+ \(active\)')
-  if !empty(paneid)
-    return matchstr(paneid, '\v^\%\d+')
-  else
-    return matchstr(line, '\v^\d+')
-  endif
-endfunction
-
 function VimCmdLineStart_ExTerm(app)
     " Check if the REPL application is already running
     if g:cmdline_tmuxsname[b:cmdline_filetype] != ""
@@ -96,23 +92,28 @@ function VimCmdLineStart_ExTerm(app)
 
     let g:cmdline_tmuxsname[b:cmdline_filetype] = "vcl" . localtime()
 
-    let cnflines = ['set-option -g prefix C-a',
-                \ 'unbind-key C-b',
-                \ 'bind-key C-a send-prefix',
-                \ 'set-window-option -g mode-keys vi',
-                \ 'set -g status off',
-                \ 'set -g default-terminal "screen-256color"',
-                \ "set -g terminal-overrides 'xterm*:smcup@:rmcup@'" ]
-    if g:cmdline_external_term_cmd =~ "rxvt" || g:cmdline_external_term_cmd =~ "urxvt"
-        let cnflines = cnflines + [
-                    \ "set terminal-overrides 'rxvt*:smcup@:rmcup@'" ]
+    if exists('g:cmdline_tmux_conf')
+        let tconf = expand(g:cmdline_tmux_conf)
+    else
+        let tconf = g:cmdline_tmp_dir . "/tmux.conf"
+        let cnflines = ['set-option -g prefix C-a',
+                    \ 'unbind-key C-b',
+                    \ 'bind-key C-a send-prefix',
+                    \ 'set-window-option -g mode-keys vi',
+                    \ 'set -g status off',
+                    \ 'set -g default-terminal "screen-256color"',
+                    \ "set -g terminal-overrides 'xterm*:smcup@:rmcup@'" ]
+        if g:cmdline_external_term_cmd =~ "rxvt" || g:cmdline_external_term_cmd =~ "urxvt"
+            let cnflines = cnflines + [
+                        \ "set terminal-overrides 'rxvt*:smcup@:rmcup@'" ]
+        endif
+        call writefile(cnflines, tconf)
     endif
-    call writefile(cnflines, g:cmdline_tmp_dir . "/tmux.conf")
 
 
     let cmd = printf(g:cmdline_external_term_cmd,
-                \ 'tmux -2 -f "' . g:cmdline_tmp_dir . '/tmux.conf' .
-                \ '" -L VimCmdLine new-session -s ' . g:cmdline_tmuxsname[b:cmdline_filetype] . ' ' . a:app)
+                \ 'tmux -2 -f "' . tconf . '" -L VimCmdLine new-session -s ' .
+                \ g:cmdline_tmuxsname[b:cmdline_filetype] . ' ' . a:app)
     call system(cmd)
 endfunction
 
@@ -126,8 +127,7 @@ function VimCmdLineStart_Tmux(app)
         return
     endif
 
-    let g:cmdline_vim_pane = GetTmuxActivePane()
-    let tcmd = "tmux split-window "
+    let tcmd = "tmux split-window -d -t $TMUX_PANE -P -F \"#{pane_id}\" "
     if g:cmdline_vsplit
         if g:cmdline_term_width == -1
             let tcmd .= "-h"
@@ -138,17 +138,12 @@ function VimCmdLineStart_Tmux(app)
         let tcmd .= "-l " . g:cmdline_term_height
     endif
     let tcmd .= " " . a:app
-    let slog = system(tcmd)
+    let paneid = system(tcmd)
     if v:shell_error
-        exe 'echoerr ' . slog
+        exe 'echoerr ' . paneid
         return
     endif
-    let s:cmdline_app_pane = GetTmuxActivePane()
-    let slog = system("tmux select-pane -t " . g:cmdline_vim_pane)
-    if v:shell_error
-        exe 'echoerr ' . slog
-        return
-    endif
+    let s:cmdline_app_pane = paneid
 endfunction
 
 " Run the interpreter in a Neovim terminal buffer
@@ -188,6 +183,7 @@ endfunction
 function VimCmdLineCreateMaps()
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' :call VimCmdLineSendLine()<CR>'
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send_and_stay . ' :call VimCmdLineSendLineAndStay()<CR>'
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_motion . ' :set opfunc=VimCmdLineSendMotion<CR>g@'
     exe 'vmap <silent><buffer> ' . g:cmdline_map_send .
                 \ ' <Esc>:call VimCmdLineSendSelection()<CR>'
     if exists("b:cmdline_source_fun")
@@ -328,6 +324,30 @@ function VimCmdLineSendParagraph()
     endif
 endfunction
 
+function! VimCmdLineSendMotion(type, ...)
+    let sel_save = &selection
+    let &selection = "inclusive"
+    let reg_save = @@
+
+    if a:0
+        silent exe "normal! gvy"
+    elseif a:type == 'line'
+        silent exe "normal! '[V']y"
+    else
+        silent exe "normal! `[v`]y"
+    endif
+
+    let the_list = []
+    for line in split(@@, "\n")
+        call add(the_list, line)
+    endfor
+
+    call b:cmdline_source_fun(the_list)
+
+    let &selection = sel_save
+    let @@ = reg_save
+endfunction
+
 let s:all_marks = "abcdefghijklmnopqrstuvwxyz"
 
 function VimCmdLineSendMBlock()
@@ -398,6 +418,18 @@ function VimCmdLineSetApp(ftype)
     endif
 endfunction
 
+function VimCmdLineLeave()
+    let flist = split(glob(g:cmdline_tmp_dir . '/lines.*'), '\n')
+    for fname in flist
+        call delete(fname)
+    endfor
+    if executable("rmdir")
+        call system("rmdir '" . g:cmdline_tmp_dir . "'")
+    endif
+endfunction
+
+autocmd VimLeave * call VimCmdLineLeave()
+
 " Default mappings
 if !exists("g:cmdline_map_start")
     let g:cmdline_map_start = "<LocalLeader>s"
@@ -407,6 +439,9 @@ if !exists("g:cmdline_map_send")
 endif
 if !exists("g:cmdline_map_send_and_stay")
     let g:cmdline_map_send_and_stay = "<LocalLeader><Space>"
+endif
+if !exists("g:cmdline_map_send_motion")
+    let g:cmdline_map_send_motion = "<LocalLeader>m"
 endif
 if !exists("g:cmdline_map_source_fun")
     let g:cmdline_map_source_fun = "<LocalLeader>f"
