@@ -27,6 +27,14 @@ Either use a plugin manager such as [Vim-Plug] or copy the directories
 `ftplugin`, `plugin` and `syntax` and their files to your `~/.vim` or
 `~/.config/nvim` directory.
 
+[Pathogen](https://github.com/tpope/vim-pathogen) users can clone the 
+git repository into the `bundle` folder:
+
+```
+cd ~/.vim/bundle && \
+git clone git@github.com:jalvesaq/vimcmdline
+```
+
 You have to install Tmux if you either want to run the interpreter in an
 external terminal emulator or are using Vim.
 
