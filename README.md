@@ -32,7 +32,7 @@ git repository into the `bundle` folder:
 
 ```
 cd ~/.vim/bundle && \
-git clone git@github.com:jalvesaq/vimcmdline
+git clone https://github.com/jalvesaq/vimcmdline
 ```
 
 You have to install Tmux if you either want to run the interpreter in an
