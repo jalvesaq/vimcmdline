@@ -49,16 +49,17 @@ endfunction
 
 function! PythonSendLine()
     let line = getline(".")
-    if line =~ '^class ' || line =~ '^def '
+    let haselse = line =~ '^if ' || line =~ '^while '
+    if line =~ '^class ' || line =~ '^def ' || line =~ '^while ' || line =~ '^if '
         let lines = []
         let idx = line('.')
         while idx <= line('$')
-            if line != ''
+            if line !~ '^\s*$'
                 let lines += [line]
             endif
             let idx += 1
             let line = getline(idx)
-            if line =~ '^\S'
+            if line =~ '^\S' && !(haselse && line =~ '^else:\s*$')
                 break
             endif
         endwhile
