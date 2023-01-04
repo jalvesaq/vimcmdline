@@ -4,8 +4,6 @@ if !exists('g:cmdline_job')
 endif
 
 function! MagmaSourceLines(lines)
-    "call VimCmdLineSendCmd('%cpaste -q')
-    "sleep 100m " Wait for IPython to read stdin
     call VimCmdLineSendCmd(join(a:lines, b:cmdline_nl))
 endfunction
 
