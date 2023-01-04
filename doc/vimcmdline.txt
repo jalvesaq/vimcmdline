@@ -219,7 +219,13 @@ value, as in the example:
  let cmdline_app['ruby']   = 'pry'
  let cmdline_app['sh']     = 'bash'
 <
-						   *cmdline_external_term_cmd*
+The same example for |init.lua|:
+>
+ vim.g.cmdline_app = {
+     ruby = 'pry',
+     sh   = 'bash'
+ }
+<
 If you want to run the interpreter in an external terminal emulator, you have
 to define in your |vimrc| the command to run it, as in the examples:
 >

@@ -1,12 +1,7 @@
-" Ensure that plugin/vimcmdline.vim was sourced
-if !exists("g:cmdline_job")
-    runtime plugin/vimcmdline.vim
-endif
-
 " Write a temp file and source this temp file
 function! KdbSourceLines(lines)
     call writefile(a:lines, g:cmdline_tmp_dir . "/lines.q")
-    call VimCmdLineSendCmd("\\l " . g:cmdline_tmp_dir . "/lines.q")
+    call cmdline#SendCmd("\\l " . g:cmdline_tmp_dir . "/lines.q")
 endfunction
 
 let b:cmdline_nl = "\n"
@@ -19,6 +14,7 @@ let b:cmdline_source_fun = function("KdbSourceLines")
 let b:cmdline_send_empty = 1
 let b:cmdline_filetype = "kdb"
 
-exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call VimCmdLineStartApp()<CR>'
-
-call VimCmdLineSetApp("kdb")
+if !exists("g:cmdline_map_start")
+    let g:cmdline_map_start = "<LocalLeader>s"
+endif
+exe 'nmap <buffer><silent> ' . g:cmdline_map_start . ' :call cmdline#StartApp()<CR>'
