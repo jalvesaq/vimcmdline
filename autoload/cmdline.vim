@@ -440,9 +440,6 @@ function cmdline#SetApp(ftype)
             endif
         endfor
     endif
-    if g:cmdline_job[b:cmdline_filetype] || g:cmdline_tmuxsname[b:cmdline_filetype] != "" || s:cmdline_app_pane != ''
-        call cmdline#CreateMaps()
-    endif
 endfunction
 
 function cmdline#Leave()
