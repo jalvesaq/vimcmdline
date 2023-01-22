@@ -36,20 +36,17 @@ function cmdline#Init()
     let g:cmdline_job = {}
     let g:cmdline_termbuf = {}
     let g:cmdline_tmuxsname = {}
-    let s:ftlist = split(glob(expand('<script>:h:h') . '/ftplugin/*'))
-    let g:TheFTList = s:ftlist
+    let ftlist = split(glob(expand('<script>:h:h') . '/ftplugin/*'))
 
-    call map(s:ftlist, "substitute(v:val, '.*/', '', '')")
-    call map(s:ftlist, "substitute(v:val, '.*\\', '', '')")
-    call map(s:ftlist, "substitute(v:val, '_cmdline.vim', '', '')")
+    call map(ftlist, "substitute(v:val, '.*/', '', '')")
+    call map(ftlist, "substitute(v:val, '.*\\', '', '')")
+    call map(ftlist, "substitute(v:val, '_cmdline.vim', '', '')")
 
-    for s:ft in s:ftlist
-        let g:cmdline_job[s:ft] = 0
-        let g:cmdline_termbuf[s:ft] = ''
-        let g:cmdline_tmuxsname[s:ft] = ''
+    for ft in ftlist
+        let g:cmdline_job[ft] = 0
+        let g:cmdline_termbuf[ft] = ''
+        let g:cmdline_tmuxsname[ft] = ''
     endfor
-    unlet s:ftlist
-    unlet s:ft
     let s:cmdline_app_pane = ''
 
     autocmd VimLeave * call cmdline#Leave()
