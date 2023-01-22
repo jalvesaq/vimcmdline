@@ -36,17 +36,6 @@ function cmdline#Init()
     let g:cmdline_job = {}
     let g:cmdline_termbuf = {}
     let g:cmdline_tmuxsname = {}
-    let ftlist = split(glob(expand('<script>:h:h') . '/ftplugin/*'))
-
-    call map(ftlist, "substitute(v:val, '.*/', '', '')")
-    call map(ftlist, "substitute(v:val, '.*\\', '', '')")
-    call map(ftlist, "substitute(v:val, '_cmdline.vim', '', '')")
-
-    for ft in ftlist
-        let g:cmdline_job[ft] = 0
-        let g:cmdline_termbuf[ft] = ''
-        let g:cmdline_tmuxsname[ft] = ''
-    endfor
     let s:cmdline_app_pane = ''
 
     autocmd VimLeave * call cmdline#Leave()
@@ -98,7 +87,7 @@ endfunction
 
 function cmdline#Start_ExTerm(app)
     " Check if the REPL application is already running
-    if g:cmdline_tmuxsname[b:cmdline_filetype] != ""
+    if has_key(g:cmdline_tmuxsname, b:cmdline_filetype) && g:cmdline_tmuxsname[b:cmdline_filetype] != ""
         let tout = system("tmux -L VimCmdLine has-session -t " . g:cmdline_tmuxsname[b:cmdline_filetype])
         if tout =~ "VimCmdLine" || tout =~ g:cmdline_tmuxsname[b:cmdline_filetype]
             unlet g:cmdline_tmuxsname[b:cmdline_filetype]
@@ -170,7 +159,7 @@ endfunction
 function cmdline#Start_Nvim(app)
     let edbuf = bufname("%")
     let thisft = b:cmdline_filetype
-    if g:cmdline_job[b:cmdline_filetype]
+    if has_key(g:cmdline_job, b:cmdline_filetype) && g:cmdline_job[b:cmdline_filetype]
         return
     endif
     set switchbuf=useopen
