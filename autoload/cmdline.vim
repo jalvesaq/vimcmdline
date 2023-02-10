@@ -241,7 +241,7 @@ endfunction
 
 " Send a single line to the interpreter
 function cmdline#SendCmd(...)
-    if g:cmdline_job[b:cmdline_filetype]
+    if has_key(g:cmdline_job, b:cmdline_filetype) && g:cmdline_job[b:cmdline_filetype]
         if g:cmdline_auto_scroll && (!exists('b:cmdline_quit_cmd') || a:1 != b:cmdline_quit_cmd)
             let isnormal = mode() ==# 'n'
             let curwin = winnr()
@@ -399,7 +399,8 @@ endfunction
 function cmdline#Quit(ftype)
     if exists("b:cmdline_quit_cmd")
         call cmdline#SendCmd(b:cmdline_quit_cmd)
-        if g:cmdline_termbuf[a:ftype] != ""
+
+        if has_key(g:cmdline_termbuf, a:ftype) && g:cmdline_termbuf[a:ftype] != ""
             exe "sb " . g:cmdline_termbuf[a:ftype]
             startinsert
             let g:cmdline_termbuf[a:ftype] = ""
