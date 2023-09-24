@@ -119,7 +119,6 @@ function cmdline#Start_ExTerm(app)
         call writefile(cnflines, tconf)
     endif
 
-
     let cmd = printf(g:cmdline_external_term_cmd,
                 \ 'tmux -2 -f "' . tconf . '" -L VimCmdLine new-session -s ' .
                 \ g:cmdline_tmuxsname[b:cmdline_filetype] . ' ' . a:app)
@@ -306,15 +305,23 @@ function cmdline#SendLineAndStay()
     endif
 endfunction
 
+function cmdline#SelectionToString()
+    try
+        let a_orig = @a
+        silent! normal! gv"ay
+        return @a
+    finally
+        let @a = a_orig
+    endtry
+endfunction
+
 function cmdline#SendSelection()
     if line("'<") == line("'>")
-        let i = col("'<") - 1
-        let j = col("'>") - i
-        let l = getline("'<")
-        let line = strpart(l, i, j)
+        let line = cmdline#SelectionToString()
         call cmdline#SendCmd(line)
     elseif exists("b:cmdline_source_fun")
-        call b:cmdline_source_fun(getline("'<", "'>"))
+        let lines = split(cmdline#SelectionToString(), "\n")
+        call b:cmdline_source_fun(lines)
     endif
 endfunction
 
