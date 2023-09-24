@@ -229,8 +229,7 @@ The same example for |init.lua|:
 If you want to run the interpreter in an external terminal emulator, you have
 to define in your |vimrc| the command to run it, as in the examples:
 >
- let cmdline_external_term_cmd = "gnome-terminal -e '%s'"
- let cmdline_external_term_cmd = "xterm -e '%s' &"
+ let cmdline_external_term_cmd = "gnome-terminal -- '%s'"
  let cmdline_external_term_cmd = 'kitty %s &'
 <
 where `%s` will be replaced with the terminal command required to run the REPL

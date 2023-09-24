@@ -20,19 +20,16 @@ running in a tmux pane, it runs one REPL application for Vim instance.
 
 Support for running the interpreter in Vim's built-in terminal was not
 implemented.
-
-## How to install
-
-Either use a plugin manager such as [Vim-Plug] or copy the directories
-`ftplugin`, `plugin` and `syntax` and their files to your `~/.vim` or
-`~/.config/nvim` directory.
-
-You have to install Tmux if you either want to run the interpreter in an
-external terminal emulator or are using Vim.
-
 I have never adapted the plugin to run the interpreter within Vim's built-in
 terminal (as it does in Neovim) because Vim cannot colorize the output printed
 in its terminal.
+
+## How to install
+
+Use a plugin manager to install vimcmdline.
+
+You have to install Tmux if you either want to run the interpreter in an
+external terminal emulator or are using Vim.
 
 
 ## Usage and options
@@ -73,11 +70,9 @@ for further instructions.
 
 ## See also
 
-Plugins with similar functionality are [neoterm], [vim-slime] and [repl.nvim].
+Plugins with similar functionality are [vim-slime] and [neoterm].
 
-[neoterm]: https://github.com/kassio/neoterm
 [Vim]: http://www.vim.org
 [Neovim]: https://github.com/neovim/neovim
-[Vim-Plug]: https://github.com/junegunn/vim-plug
 [vim-slime]: https://github.com/jpalardy/vim-slime
-[repl.nvim]: https://gitlab.com/HiPhish/repl.nvim
+[neoterm]: https://github.com/kassio/neoterm
