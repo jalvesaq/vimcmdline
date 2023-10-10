@@ -2,10 +2,11 @@
 
 This plugin sends lines from either [Vim] or [Neovim] to a command line
 interpreter (REPL application). There is support for
-Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Kotlin, Lisp, Lua, Macaulay2, Matlab,
-Prolog, Python, Racket, Ruby, Sage, Scala, Shell script, Swift, Kdb/q and TypeScript
-(see [Nvim-R](https://github.com/jalvesaq/Nvim-R) for R support on
-Vim/Neovim). The interpreter runs in Neovim's built-in terminal.
+Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Kotlin, Lisp,
+Lua, Macaulay2, Matlab, Prolog, Python, R, Racket, Ruby, Sage,
+Scala, Shell script, Swift, Kdb/q and TypeScript
+(see [Nvim-R] for a more compreehsive support for R in Vim/Neovim).
+The interpreter runs in Neovim's built-in terminal.
 If Tmux is installed, the interpreter can also run in
 an external terminal emulator or in a tmux pane. The main advantage
 of running the interpreter in a Neovim terminal is that the output is
@@ -46,7 +47,7 @@ for further instructions.
      to support.
 
   2. Save the new script with the name "filetype\_cmdline.vim" where
-     "filetype" is the output of `echo &filetype` when you are editing a
+     "filetype" is the output of `:echo &filetype` when you are editing a
      script of the language that you want to support.
 
   3. Edit the new script and change the values of its variables as necessary.
@@ -58,9 +59,8 @@ for further instructions.
      script supporting the language whose output is closer to the output of
      the language that you want to support.
 
-  6. Save the new script with the name "cmdlineoutput\_app.vim" where "app" is
-     the name of the interpreter. For example, for the "matlab" file-type, the
-     interpreter is "octave".
+  6. Save the new script with the name "cmdlineoutput\_filetype.vim" where
+     "filetype" is the output of `:echo &filetype`.
 
   7. Edit the new script and change both the pattern used to recognize the
      input line and the pattern used to recognize errors.
@@ -76,3 +76,4 @@ Plugins with similar functionality are [vim-slime] and [neoterm].
 [Neovim]: https://github.com/neovim/neovim
 [vim-slime]: https://github.com/jpalardy/vim-slime
 [neoterm]: https://github.com/kassio/neoterm
+[Nvim-R]: https://github.com/jalvesaq/Nvim-R
