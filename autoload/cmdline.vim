@@ -155,7 +155,7 @@ function cmdline#Start_Tmux(app)
 endfunction
 
 " Run the interpreter in a Neovim terminal buffer
-function cmdline#Start_Nvim(app)
+function cmdline#Start_Nvim(app, ft)
     let edbuf = bufname("%")
     let thisft = b:cmdline_filetype
     if has_key(g:cmdline_job, b:cmdline_filetype) && g:cmdline_job[b:cmdline_filetype]
@@ -181,7 +181,7 @@ function cmdline#Start_Nvim(app)
         tnoremap <buffer> <Esc> <C-\><C-n>
     endif
     if g:cmdline_outhl
-        exe 'runtime syntax/cmdlineoutput_' . a:app . '.vim'
+        exe 'runtime syntax/cmdlineoutput_' . a:ft . '.vim'
     endif
     normal! G
     exe "sbuffer " . edbuf
@@ -231,7 +231,7 @@ function cmdline#StartApp()
         call cmdline#Start_ExTerm(b:cmdline_app)
     else
         if g:cmdline_in_buffer
-            call cmdline#Start_Nvim(b:cmdline_app)
+            call cmdline#Start_Nvim(b:cmdline_app, &filetype)
         else
             call cmdline#Start_Tmux(b:cmdline_app)
         endif
