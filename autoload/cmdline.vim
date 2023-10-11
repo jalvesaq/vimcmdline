@@ -180,7 +180,10 @@ function cmdline#Start_Nvim(app, ft)
     if g:cmdline_esc_term
         tnoremap <buffer> <Esc> <C-\><C-n>
     endif
-    if g:cmdline_outhl
+    if ((type(g:cmdline_outhl) == v:t_number || type(g:cmdline_outhl) == v:t_bool) && g:cmdline_outhl) ||
+                \ (type(g:cmdline_outhl) == v:t_dict &&
+                \ (!has_key(g:cmdline_outhl, a:ft) ||
+                \ (has_key(g:cmdline_outhl, a:ft) && g:cmdline_outhl[a:ft])))
         exe 'runtime syntax/cmdlineoutput_' . a:ft . '.vim'
     endif
     normal! G

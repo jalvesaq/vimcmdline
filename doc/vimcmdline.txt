@@ -158,8 +158,17 @@ put in your |vimrc|:
 If you want to completely disable the colorizing of the interpreter output,
 put in your |vimrc|:
 >
- let cmdline_outhl = 1
+ let cmdline_outhl = 0
 <
+Option `cmdline_outhl` can also be a dictionary where you indicate for each
+file type whether it should have the output of its interpreter highlighted
+or not. Example:
+>
+ let cmdline_outhl = {'python': 0}
+<
+By default, all file types with a corresponding `syntax/cmdlineoutput_.vim`
+script will be highlighted.
+
 
 3.3 Other options~
 							      *cmdline_vsplit*
