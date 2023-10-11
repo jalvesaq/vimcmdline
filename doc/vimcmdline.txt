@@ -228,11 +228,12 @@ value, as in the example:
  let cmdline_app['ruby']   = 'pry'
  let cmdline_app['sh']     = 'bash'
 <
-The same example for |init.lua|:
+Example for |init.lua|:
 >
  vim.g.cmdline_app = {
-     ruby = 'pry',
-     sh   = 'bash'
+     sh = 'bash',
+     r = 'ssh -t user@remote-machine R --no-save',
+     python = '~/.py3env/bin/python3',
  }
 <
 If you want to run the interpreter in an external terminal emulator, you have
