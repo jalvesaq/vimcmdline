@@ -17,7 +17,8 @@ Author: Jakson A. Aquino <jalvesaq@gmail.com>
         Width of interpreter window or pane               |cmdline_term_width|
         Temporary directory                                  |cmdline_tmp_dir|
         Keep the cursor at the end of terminal (nvim)    |cmdline_auto_scroll|
-	Set the application to run as interpreter                |cmdline_app|
+        Set the application to run as interpreter                |cmdline_app|
+        Set actions for each interpreter                     |cmdline_actions|
         Run interpreter in external terminal       |cmdline_external_term_cmd|
 
 
@@ -236,6 +237,33 @@ Example for |init.lua|:
      python = '~/.py3env/bin/python3',
  }
 <
+							     *cmdline_actions*
+You cand set special commands to be sent to the interpreters. Examples for R
+and Python (for |init.lua|):
+>
+ vim.g.cmdline_actions = {
+     r = {
+         {'<LocalLeader>l', 'ls()'},
+         {'<LocalLeader>p', 'print(%s)'},
+         {'<LocalLeader>s', 'summary(%s)'},
+         {'<LocalLeader>t', 'str(%s)'},
+         {'<LocalLeader>hw', 'cat("Hello World\\\\n")'},
+     },
+     python = {
+         {'<LocalLeader>l', 'locals()'},
+         {'<LocalLeader>g', 'globals()'},
+         {'<LocalLeader>p', 'print(%s)'},
+         {'<LocalLeader>t', 'type(%s)'},
+         {'<LocalLeader>d', 'dir(%s)'},
+     }
+ }
+<
+The `cmdline_actions` variable is a dictionary. Each item has a 'filetype' as
+key and has two elements: the key combination and the command to be sent to
+the interpreter. The string "%s" is replaced with the word under cursor (the
+result of the Vim command `expand('<cword>')`).
+
+						   *cmdline_external_term_cmd*
 If you want to run the interpreter in an external terminal emulator, you have
 to define in your |vimrc| the command to run it, as in the examples:
 >

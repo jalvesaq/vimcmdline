@@ -31,6 +31,7 @@ function cmdline#Init()
     let g:cmdline_tmp_dir = get(g:, 'cmdline_tmp_dir', '/tmp/cmdline_' . localtime() . '_' . $USER)
     let g:cmdline_outhl = get(g:, 'cmdline_outhl', 1)
     let g:cmdline_auto_scroll = get(g:, 'cmdline_auto_scroll', 1)
+    let g:cmdline_actions = get(g:, 'cmdline_actions', {})
 
     " Internal variables
     let g:cmdline_job = {}
@@ -208,6 +209,14 @@ function cmdline#CreateMaps()
     if exists("b:cmdline_quit_cmd")
         exe 'nmap <silent><buffer> ' . g:cmdline_map_quit . ' :call cmdline#Quit("' . b:cmdline_filetype . '")<CR>'
     endif
+
+    for ft in keys(g:cmdline_actions)
+        if ft == &filetype
+            for amap in g:cmdline_actions[ft]
+                exe 'nmap <silent><buffer> ' . amap[0] . ' :call cmdline#Action("' . substitute(amap[1], '"', '\\"', 'g') . '")<CR>'
+            endfor
+        endif
+    endfor
 endfunction
 
 " Common procedure to start the interpreter
@@ -403,6 +412,15 @@ function cmdline#SendMBlock()
     endif
     let lines = getline(lineA, lineB)
     call b:cmdline_source_fun(lines)
+endfunction
+
+function cmdline#Action(fmt)
+    if a:fmt =~ '%s'
+        let cmd = printf(a:fmt, expand('<cword>'))
+    else
+        let cmd = a:fmt
+    endif
+    call cmdline#SendCmd(cmd)
 endfunction
 
 " Quit the interpreter
