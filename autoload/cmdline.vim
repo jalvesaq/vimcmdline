@@ -15,6 +15,8 @@
 " Author: Jakson Alves de Aquino <jalvesaq@gmail.com>
 "==========================================================================
 
+let s:plugin_home = expand("<sfile>:h:h")
+
 function cmdline#Init()
     " Set option
     if has("nvim")
@@ -70,6 +72,21 @@ function cmdline#Init()
     if !exists("g:cmdline_map_quit")
         let g:cmdline_map_quit = "<LocalLeader>q"
     endif
+endfunction
+
+function! cmdline#QuartoLng()
+    if &filetype != 'quarto'
+        return &filetype
+    endif
+
+    let chunkline = search("^[ \t]*```[ ]*{", "bncW")
+    let docline = search("^[ \t]*```$", "bncW")
+    if chunkline <= docline
+        return 'none'
+    endif
+    let lng = substitute(substitute(getline(chunkline), '.*{', '', ''), '\W.*', '', '')
+    exe 'source ' . s:plugin_home . '/ftplugin/' . lng . '_cmdline.vim'
+    return lng
 endfunction
 
 " Skip empty lines
@@ -196,10 +213,10 @@ function cmdline#Start_Nvim(app, ft)
     stopinsert
 endfunction
 
-function cmdline#CreateMaps()
+function cmdline#CreateMaps(lng)
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' :call cmdline#SendLine()<CR>'
     exe 'nmap <silent><buffer> ' . g:cmdline_map_send_and_stay . ' :call cmdline#SendLineAndStay()<CR>'
-    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_motion . ' :set opfunc=VimCmdLineSendMotion<CR>g@'
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_motion . ' :set opfunc=cmdline#SendMotion<CR>g@'
     exe 'vmap <silent><buffer> ' . g:cmdline_map_send .
                 \ ' <Esc>:call cmdline#SendSelection()<CR>'
     if exists("b:cmdline_source_fun")
@@ -215,7 +232,7 @@ function cmdline#CreateMaps()
     endif
 
     for ft in keys(g:cmdline_actions)
-        if ft == &filetype
+        if ft == a:lng
             for amap in g:cmdline_actions[ft]
                 exe 'nmap <silent><buffer> ' . amap[0] . ' :call cmdline#Action("' . substitute(amap[1], '"', '\\"', 'g') . '")<CR>'
             endfor
@@ -225,19 +242,24 @@ endfunction
 
 " Common procedure to start the interpreter
 function cmdline#StartApp()
+    let lng = cmdline#QuartoLng()
+    if lng == 'none'
+        return
+    endif
+
     " Ensure that the necessary variables were created
     if !exists("g:cmdline_job")
         call cmdline#Init()
     endif
 
-    call cmdline#SetApp(&filetype)
+    call cmdline#SetApp(lng)
 
     if !exists("b:cmdline_app")
         echomsg 'There is no application defined to be executed for file of type "' . b:cmdline_filetype . '".'
         return
     endif
 
-    call cmdline#CreateMaps()
+    call cmdline#CreateMaps(lng)
 
     if !isdirectory(g:cmdline_tmp_dir)
         call mkdir(g:cmdline_tmp_dir)
@@ -247,7 +269,7 @@ function cmdline#StartApp()
         call cmdline#Start_ExTerm(b:cmdline_app)
     else
         if g:cmdline_in_buffer
-            call cmdline#Start_Nvim(b:cmdline_app, &filetype)
+            call cmdline#Start_Nvim(b:cmdline_app, lng)
         else
             call cmdline#Start_Tmux(b:cmdline_app)
         endif
@@ -302,10 +324,15 @@ endfunction
 
 " Send current line to the interpreter and go down to the next non empty line
 function cmdline#SendLine()
+    if cmdline#QuartoLng() == 'none'
+        return
+    endif
+
     if exists('*b:cmdline_send')
         call b:cmdline_send()
         return
     endif
+
     let line = getline(".")
     if strlen(line) > 0 || b:cmdline_send_empty
         call cmdline#SendCmd(line)
@@ -315,6 +342,10 @@ endfunction
 
 " Send current line to the interpreter and but keep cursor on current line
 function cmdline#SendLineAndStay()
+    if cmdline#QuartoLng() == 'none'
+        return
+    endif
+
     let line = getline(".")
     if strlen(line) > 0 || b:cmdline_send_empty
         call cmdline#SendCmd(line)
@@ -332,6 +363,10 @@ function cmdline#SelectionToString()
 endfunction
 
 function cmdline#SendSelection()
+    if cmdline#QuartoLng() == 'none'
+        return
+    endif
+
     if line("'<") == line("'>")
         let line = cmdline#SelectionToString()
         call cmdline#SendCmd(line)
@@ -342,6 +377,10 @@ function cmdline#SendSelection()
 endfunction
 
 function cmdline#SendParagraph()
+    if cmdline#QuartoLng() == 'none'
+        return
+    endif
+
     let i = line(".")
     let c = col(".")
     let max = line("$")
@@ -419,6 +458,10 @@ function cmdline#SendMBlock()
 endfunction
 
 function cmdline#Action(fmt)
+    if cmdline#QuartoLng() == 'none'
+        return
+    endif
+
     if a:fmt =~ '%s'
         let cmd = printf(a:fmt, expand('<cword>'))
     else
@@ -429,6 +472,10 @@ endfunction
 
 " Quit the interpreter
 function cmdline#Quit(ftype)
+    if cmdline#QuartoLng() == 'none'
+        return
+    endif
+
     if exists("b:cmdline_quit_cmd")
         call cmdline#SendCmd(b:cmdline_quit_cmd)
 

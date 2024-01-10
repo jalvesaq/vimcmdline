@@ -165,7 +165,7 @@ Option `cmdline_outhl` can also be a dictionary where you indicate for each
 file type whether it should have the output of its interpreter highlighted
 or not. Example:
 >
- let cmdline_outhl = {'python': 0}
+ let cmdline_outhl = {'r': 0} " R package colorout is better
 <
 By default, all file types with a corresponding `syntax/cmdlineoutput_.vim`
 script will be highlighted.
@@ -244,10 +244,11 @@ and Python (for |init.lua|):
  vim.g.cmdline_actions = {
      r = {
          {'<LocalLeader>l', 'ls()'},
-         {'<LocalLeader>p', 'print(%s)'},
          {'<LocalLeader>s', 'summary(%s)'},
+         {'<LocalLeader>r', 'print(%s)'},
          {'<LocalLeader>t', 'str(%s)'},
-         {'<LocalLeader>hw', 'cat("Hello World\\\\n")'},
+         {'<LocalLeader>h', 'help(%s)'},
+         {'<LocalLeader>a', 'args(%s)'},
      },
      python = {
          {'<LocalLeader>l', 'locals()'},

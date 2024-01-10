@@ -6,6 +6,9 @@ Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Kotlin, Lisp,
 Lua, Macaulay2, Matlab, Prolog, Python, R, Racket, Ruby, Sage,
 Scala, Shell script, Swift, Kdb/q and TypeScript
 (see [Nvim-R] for a more compreehsive support for R in Vim/Neovim).
+If the file type is `quarto`, `vimcmdline` will try to infer what interpreter
+should be started.
+
 The interpreter runs in Neovim's built-in terminal.
 If Tmux is installed, the interpreter can also run in
 an external terminal emulator or in a tmux pane. The main advantage
