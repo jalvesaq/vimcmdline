@@ -85,8 +85,14 @@ function! cmdline#QuartoLng()
         return 'none'
     endif
     let lng = substitute(substitute(getline(chunkline), '.*{', '', ''), '\W.*', '', '')
-    exe 'source ' . s:plugin_home . '/ftplugin/' . lng . '_cmdline.vim'
-    return lng
+    let scrpt = s:plugin_home . '/ftplugin/' . lng . '_cmdline.vim'
+    if filereadable(scrpt)
+        exe 'source ' . scrpt
+        return lng
+    else
+        echomsg 'vimcmdline does not support file of type "' . lng . '"'
+        return 'none'
+    endif
 endfunction
 
 " Skip empty lines
@@ -214,27 +220,27 @@ function cmdline#Start_Nvim(app, ft)
 endfunction
 
 function cmdline#CreateMaps(lng)
-    exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' :call cmdline#SendLine()<CR>'
-    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_and_stay . ' :call cmdline#SendLineAndStay()<CR>'
-    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_motion . ' :set opfunc=cmdline#SendMotion<CR>g@'
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send . ' <Cmd>call cmdline#SendLine()<CR>'
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_and_stay . ' <Cmd>call cmdline#SendLineAndStay()<CR>'
+    exe 'nmap <silent><buffer> ' . g:cmdline_map_send_motion . ' <Cmd>set opfunc=cmdline#SendMotion<CR>g@'
     exe 'vmap <silent><buffer> ' . g:cmdline_map_send .
                 \ ' <Esc>:call cmdline#SendSelection()<CR>'
     if exists("b:cmdline_source_fun")
         exe 'nmap <silent><buffer> ' . g:cmdline_map_source_fun .
-                    \ ' :call b:cmdline_source_fun(getline(1, "$"))<CR>'
+                    \ ' <Cmd>call b:cmdline_source_fun(getline(1, "$"))<CR>'
         exe 'nmap <silent><buffer> ' . g:cmdline_map_send_paragraph .
-                    \ ' :call cmdline#SendParagraph()<CR>'
+                    \ ' <Cmd>call cmdline#SendParagraph()<CR>'
         exe 'nmap <silent><buffer> ' . g:cmdline_map_send_block .
-                    \ ' :call cmdline#SendMBlock()<CR>'
+                    \ ' <Cmd>call cmdline#SendMBlock()<CR>'
     endif
     if exists("b:cmdline_quit_cmd")
-        exe 'nmap <silent><buffer> ' . g:cmdline_map_quit . ' :call cmdline#Quit("' . b:cmdline_filetype . '")<CR>'
+        exe 'nmap <silent><buffer> ' . g:cmdline_map_quit . ' <Cmd>call cmdline#Quit("' . b:cmdline_filetype . '")<CR>'
     endif
 
     for ft in keys(g:cmdline_actions)
         if ft == a:lng
             for amap in g:cmdline_actions[ft]
-                exe 'nmap <silent><buffer> ' . amap[0] . ' :call cmdline#Action("' . substitute(amap[1], '"', '\\"', 'g') . '")<CR>'
+                exe 'nmap <silent><buffer> ' . amap[0] . ' <Cmd>call cmdline#Action("' . substitute(amap[1], '"', '\\"', 'g') . '")<CR>'
             endfor
         endif
     endfor

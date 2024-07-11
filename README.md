@@ -73,10 +73,12 @@ for further instructions.
 
 ## See also
 
-Plugins with similar functionality are [vim-slime] and [neoterm].
+Plugins with similar functionality are [vim-slime], [neoterm], [sniprun], and [conjure].
 
 [Vim]: http://www.vim.org
 [Neovim]: https://github.com/neovim/neovim
 [vim-slime]: https://github.com/jpalardy/vim-slime
 [neoterm]: https://github.com/kassio/neoterm
 [Nvim-R]: https://github.com/jalvesaq/Nvim-R
+[sniprun]: https://github.com/michaelb/sniprun
+[conjure]: https://github.com/Olical/conjure
