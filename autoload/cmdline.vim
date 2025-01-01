@@ -199,6 +199,16 @@ function cmdline#Start_Zellij(app)
         return
     endif
 
+    " Refocus nvim after creating the new pane
+    let focus_nvim = "zellij action focus-previous-pane"
+    call system(focus_nvim)
+    if v:shell_error
+        echohl ErrorMsg
+        echomsg "ERROR: Focus command failed with error: " . v:shell_error
+        echohl Normal
+        return
+    endif
+
     " Store that we created a pane
     let g:cmdline_zellij_pane = 1
 endfunction
