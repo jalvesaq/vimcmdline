@@ -46,7 +46,6 @@ function cmdline#Init()
     let s:cmdline_app_pane = ''
 
     " Zellij specific variables and configuration option
-    let g:cmdline_zellij_session = {}
     let g:cmdline_zellij_pane = 0
     let g:cmdline_use_zellij = get(g:, 'cmdline_use_zellij', 0)
 
@@ -202,7 +201,6 @@ function cmdline#Start_Zellij(app)
 
     " Store that we created a pane
     let g:cmdline_zellij_pane = 1
-    let g:cmdline_zellij_session[b:cmdline_filetype] = localtime()
 endfunction
 
 " Run the interpreter in a Tmux panel
@@ -579,7 +577,6 @@ function cmdline#Quit(ftype)
             let g:cmdline_termbuf[a:ftype] = ""
         endif
         let g:cmdline_tmuxsname[a:ftype] = ""
-        let g:cmdline_zellij_session[a:ftype] = ""
         let g:cmdline_zellij_pane = 0
         let s:cmdline_app_pane = ''
     else
