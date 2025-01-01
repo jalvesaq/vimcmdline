@@ -363,30 +363,62 @@ function cmdline#SendCmd(...)
                 unlet g:cmdline_tmuxsname[b:cmdline_filetype]
             endif
         elseif g:cmdline_use_zellij && g:cmdline_zellij_pane != ''
+            echomsg "DEBUG: Attempting to send command via Zellij"
+            echomsg "DEBUG: ZELLIJ env var = " . $ZELLIJ
+            echomsg "DEBUG: Zellij pane = " . g:cmdline_zellij_pane
+            echomsg "DEBUG: Command to send = " . str
+
             " For Zellij, we need to focus the next pane and write the command
             let focus_cmd = "zellij action focus-next-pane"
-            call system(focus_cmd)
+            echomsg "DEBUG: Running focus command: " . focus_cmd
+            let focus_output = system(focus_cmd)
+            echomsg "DEBUG: Focus command output: " . focus_output
+            if v:shell_error
+                echohl ErrorMsg
+                echomsg "ERROR: Focus command failed with error: " . v:shell_error
+                echohl Normal
+                return
+            endif
 
             sleep 50m  " Give Zellij a moment to switch focus
 
             " Write the command character by character to ensure proper input
             let write_cmd = "zellij action write-chars '" . str . "'"
-            call system(write_cmd)
+            echomsg "DEBUG: Running write command: " . write_cmd
+            let write_output = system(write_cmd)
+            echomsg "DEBUG: Write command output: " . write_output
+            if v:shell_error
+                echohl ErrorMsg
+                echomsg "ERROR: Write command failed with error: " . v:shell_error
+                echohl Normal
+                return
+            endif
 
             " Send the enter key separately
             let enter_cmd = "zellij action write-chars '\n'"
-            call system(enter_cmd)
+            echomsg "DEBUG: Running enter command: " . enter_cmd
+            let enter_output = system(enter_cmd)
+            echomsg "DEBUG: Enter command output: " . enter_output
+            if v:shell_error
+                echohl ErrorMsg
+                echomsg "ERROR: Enter command failed with error: " . v:shell_error
+                echohl Normal
+                return
+            endif
 
             " Return focus to vim pane
             let return_focus_cmd = "zellij action focus-previous-pane"
-            call system(return_focus_cmd)
-
+            echomsg "DEBUG: Running return focus command: " . return_focus_cmd
+            let return_focus_output = system(return_focus_cmd)
+            echomsg "DEBUG: Return focus command output: " . return_focus_output
             if v:shell_error
-                echohl WarningMsg
-                echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
+                echohl ErrorMsg
+                echomsg "ERROR: Return focus command failed with error: " . v:shell_error
                 echohl Normal
-                let g:cmdline_zellij_pane = ''
+                return
             endif
+
+            echomsg "DEBUG: Command sending complete"
         elseif s:cmdline_app_pane != ''
             let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
             call system(scmd)
