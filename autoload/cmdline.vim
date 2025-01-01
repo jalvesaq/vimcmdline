@@ -167,15 +167,11 @@ function cmdline#Start_Zellij(app)
         return
     endif
 
-    let zcmd = "zellij action new-pane -d "
+    let zcmd = "zellij action new-pane "
     if g:cmdline_vsplit
-        let zcmd .= "right "
-        if g:cmdline_term_width != -1
-            let zcmd .= "--size " . g:cmdline_term_width . " "
-        endif
+        let zcmd .= "-d right "
     else
-        let zcmd .= "down "
-        let zcmd .= "--size " . g:cmdline_term_height . " "
+        let zcmd .= "-d down "
     endif
     let zcmd .= " -- " . a:app
 
@@ -186,6 +182,15 @@ function cmdline#Start_Zellij(app)
         echomsg "Failed to create Zellij pane: " . pane_info
         echohl Normal
         return
+    endif
+
+    " After creating the pane, resize it
+    if g:cmdline_vsplit && g:cmdline_term_width != -1
+        let resize_cmd = "zellij action resize left " . (winwidth(0) - g:cmdline_term_width)
+        call system(resize_cmd)
+    elseif !g:cmdline_vsplit
+        let resize_cmd = "zellij action resize up " . (winheight(0) - g:cmdline_term_height)
+        call system(resize_cmd)
     endif
 
     " Store the pane ID for later use
