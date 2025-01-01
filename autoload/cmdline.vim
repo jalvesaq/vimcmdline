@@ -196,6 +196,12 @@ function cmdline#Start_Zellij(app)
     " Store the pane ID for later use
     let g:cmdline_zellij_pane = pane_info
     let g:cmdline_zellij_session[b:cmdline_filetype] = localtime()
+
+
+    echomsg "DEBUG: Attempting to send command via Zellij"
+    echomsg "DEBUG: ZELLIJ env var = " . $ZELLIJ
+    echomsg "DEBUG: Zellij pane = " . g:cmdline_zellij_pane
+    echomsg "DEBUG: Zellij session = " . g:cmdline_zellij_session
 endfunction
 
 " Run the interpreter in a Tmux panel
