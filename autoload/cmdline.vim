@@ -45,6 +45,11 @@ function cmdline#Init()
     let g:cmdline_tmuxsname = {}
     let s:cmdline_app_pane = ''
 
+    " Zellij specific variables and configuration option
+    let g:cmdline_zellij_session = {}
+    let g:cmdline_zellij_pane = ''
+    let g:cmdline_use_zellij = get(g:, 'cmdline_use_zellij', 0)
+
     autocmd VimLeave * call cmdline#Leave()
 
     " Default mappings
@@ -151,6 +156,39 @@ function cmdline#Start_ExTerm(app)
                 \ 'tmux -2 -f "' . tconf . '" -L VimCmdLine new-session -s ' .
                 \ g:cmdline_tmuxsname[b:cmdline_filetype] . ' ' . a:app)
     call system(cmd)
+endfunction
+
+function cmdline#Start_Zellij(app)
+    " Check if Zellij is running
+    if $ZELLIJ == ""
+        echohl WarningMsg
+        echomsg "Cannot start interpreter because not inside a Zellij session."
+        echohl Normal
+        return
+    endif
+
+    let zcmd = "zellij run --floating "
+    if g:cmdline_vsplit
+        if g:cmdline_term_width == -1
+            let zcmd .= "--width-percent 50 "
+        else
+            let zcmd .= "--width " . g:cmdline_term_width . " "
+        endif
+    else
+        let zcmd .= "--height " . g:cmdline_term_height . " "
+    endif
+    let zcmd .= " -- " . a:app
+
+    " Create new pane and get its ID
+    let pane_info = system(zcmd)
+    if v:shell_error
+        exe 'echoerr ' . pane_info
+        return
+    endif
+
+    " Store the pane ID for later use
+    let g:cmdline_zellij_pane = pane_info
+    let g:cmdline_zellij_session[b:cmdline_filetype] = localtime()
 endfunction
 
 " Run the interpreter in a Tmux panel
@@ -276,6 +314,8 @@ function cmdline#StartApp()
     else
         if g:cmdline_in_buffer
             call cmdline#Start_Nvim(b:cmdline_app, lng)
+        elseif g:cmdline_use_zellij
+            call cmdline#Start_Zellij(b:cmdline_app)
         else
             call cmdline#Start_Tmux(b:cmdline_app)
         endif
@@ -314,6 +354,15 @@ function cmdline#SendCmd(...)
                 echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
                 echohl Normal
                 unlet g:cmdline_tmuxsname[b:cmdline_filetype]
+            endif
+        elseif g:cmdline_use_zellij && g:cmdline_zellij_pane != ''
+            let zcmd = "zellij write-chars '" . str . "\n' --pane-id " . g:cmdline_zellij_pane
+            call system(zcmd)
+            if v:shell_error
+                echohl WarningMsg
+                echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
+                echohl Normal
+                let g:cmdline_zellij_pane = ''
             endif
         elseif s:cmdline_app_pane != ''
             let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
@@ -491,6 +540,8 @@ function cmdline#Quit(ftype)
             let g:cmdline_termbuf[a:ftype] = ""
         endif
         let g:cmdline_tmuxsname[a:ftype] = ""
+        let g:cmdline_zellij_session[a:ftype] = ""
+        let g:cmdline_zellij_pane = ''
         let s:cmdline_app_pane = ''
     else
         echomsg 'Quit command not defined for file of type "' . a:ftype . '".'
