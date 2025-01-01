@@ -167,13 +167,28 @@ function cmdline#Start_Zellij(app)
         return
     endif
 
+    " Create a wrapper script to preserve environment
+    let wrapper_script = g:cmdline_tmp_dir . '/env_wrapper_' . getpid() . '.sh'
+    let env_dump = []
+
+    " Dump current environment variables to the wrapper script
+    for [key, val] in items(environ())
+        let escaped_val = substitute(val, "'", "'\\\\''", "g")
+        call add(env_dump, "export " . key . "='" . escaped_val . "'")
+    endfor
+
+    " Run Zellij with the wrapper script
+    call add(env_dump, "exec " . a:app)
+    call writefile(env_dump, wrapper_script)
+    call system('chmod +x ' . wrapper_script)
+
     let zcmd = "zellij action new-pane "
     if g:cmdline_vsplit
         let zcmd .= "-d right "
     else
         let zcmd .= "-d down "
     endif
-    let zcmd .= " -- " . a:app
+    let zcmd .= " -- " . wrapper_script
 
     " Create new pane
     call system(zcmd)
@@ -181,6 +196,7 @@ function cmdline#Start_Zellij(app)
         echohl ErrorMsg
         echomsg "Failed to create Zellij pane."
         echohl Normal
+        call delete(wrapper_script)
         return
     endif
 
@@ -363,8 +379,6 @@ function cmdline#SendCmd(...)
                 unlet g:cmdline_tmuxsname[b:cmdline_filetype]
             endif
         elseif g:cmdline_use_zellij && g:cmdline_zellij_pane
-            echomsg "DEBUG: Command to send = " . str
-
             " For Zellij, we need to focus the next pane and write the command
             let focus_cmd = "zellij action focus-next-pane"
             call system(focus_cmd)
@@ -374,8 +388,6 @@ function cmdline#SendCmd(...)
                 echohl Normal
                 return
             endif
-
-            "sleep 50m  " Give Zellij a moment to switch focus
 
             " Write characters to the focused pane
             let write_cmd = "zellij action write-chars '" . str . "'"
