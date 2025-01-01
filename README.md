@@ -10,9 +10,9 @@ If the file type is `quarto`, `vimcmdline` will try to infer what interpreter
 should be started.
 
 The interpreter runs in Neovim's built-in terminal.
-If Tmux is installed, the interpreter can also run in
-an external terminal emulator or in a tmux pane. The main advantage
-of running the interpreter in a Neovim terminal is that the output is
+If Tmux or Zellij is installed, the interpreter can also run in
+an external terminal emulator (tmux-only) or in a tmux/zellij pane. The main
+advantage of running the interpreter in a Neovim terminal is that the output is
 colorized, as in the screenshot below, where we have different colors for
 general output, positive and negative numbers, and the prompt line:
 
@@ -20,7 +20,7 @@ general output, positive and negative numbers, and the prompt line:
 
 If running in either a Neovim built-in terminal or an external terminal, the
 plugin runs one instance of the REPL application for each file type. If
-running in a tmux pane, it runs one REPL application for Vim instance.
+running in a tmux or zellij pane, it runs one REPL application for Vim instance.
 
 Support for running the interpreter in Vim's built-in terminal was not
 implemented.
@@ -32,8 +32,9 @@ in its terminal.
 
 Use a plugin manager to install vimcmdline.
 
-You have to install Tmux if you either want to run the interpreter in an
-external terminal emulator or are using Vim.
+You need to install either Tmux or Zellij if you want to run the interpreter in
+a split pane. Note that external terminal emulator support requires Tmux
+specifically. If you are using Vim (not Neovim), you must have Tmux installed.
 
 
 ## Usage and options
@@ -56,7 +57,8 @@ for further instructions.
   3. Edit the new script and change the values of its variables as necessary.
 
   4. Test your new file-type script by running your application in either Vim
-     or Neovim and using either the built-in terminal or a Tmux split pane.
+     or Neovim and using either the built-in terminal or a Tmux/Zellij split
+     pane.
 
   5. Look at the Vim scripts in the `syntax` directory and make a copy of the
      script supporting the language whose output is closer to the output of
