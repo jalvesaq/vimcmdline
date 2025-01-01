@@ -363,13 +363,24 @@ function cmdline#SendCmd(...)
                 unlet g:cmdline_tmuxsname[b:cmdline_filetype]
             endif
         elseif g:cmdline_use_zellij && g:cmdline_zellij_pane != ''
-            " For Zellij, we need to focus the pane first
+            " For Zellij, we need to focus the next pane and write the command
             let focus_cmd = "zellij action focus-next-pane"
             call system(focus_cmd)
 
-            " Then write the command
-            let zcmd = "zellij action write-chars '" . str . "\n'"
-            call system(zcmd)
+            sleep 50m  " Give Zellij a moment to switch focus
+
+            " Write the command character by character to ensure proper input
+            let write_cmd = "zellij action write-chars '" . str . "'"
+            call system(write_cmd)
+
+            " Send the enter key separately
+            let enter_cmd = "zellij action write-chars '\n'"
+            call system(enter_cmd)
+
+            " Return focus to vim pane
+            let return_focus_cmd = "zellij action focus-previous-pane"
+            call system(return_focus_cmd)
+
             if v:shell_error
                 echohl WarningMsg
                 echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
