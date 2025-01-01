@@ -368,8 +368,8 @@ function cmdline#SendCmd(...)
             call system(focus_cmd)
 
             " Then write the command
-            call system(zcmd)
             let zcmd = "zellij action write-chars '" . str . "\n'"
+            call system(zcmd)
             if v:shell_error
                 echohl WarningMsg
                 echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
