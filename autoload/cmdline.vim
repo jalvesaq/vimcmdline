@@ -363,8 +363,13 @@ function cmdline#SendCmd(...)
                 unlet g:cmdline_tmuxsname[b:cmdline_filetype]
             endif
         elseif g:cmdline_use_zellij && g:cmdline_zellij_pane != ''
-            let zcmd = "zellij action write-chars '" . str . "\n' --pane-id " . g:cmdline_zellij_pane
+            " For Zellij, we need to focus the pane first
+            let focus_cmd = "zellij action focus-next-pane"
+            call system(focus_cmd)
+
+            " Then write the command
             call system(zcmd)
+            let zcmd = "zellij action write-chars '" . str . "\n'"
             if v:shell_error
                 echohl WarningMsg
                 echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
