@@ -167,15 +167,15 @@ function cmdline#Start_Zellij(app)
         return
     endif
 
-    let zcmd = "zellij run --floating "
+    let zcmd = "zellij action new-pane -d "
     if g:cmdline_vsplit
-        if g:cmdline_term_width == -1
-            let zcmd .= "--width-percent 50 "
-        else
-            let zcmd .= "--width " . g:cmdline_term_width . " "
+        let zcmd .= "right "
+        if g:cmdline_term_width != -1
+            let zcmd .= "--size " . g:cmdline_term_width . " "
         endif
     else
-        let zcmd .= "--height " . g:cmdline_term_height . " "
+        let zcmd .= "down "
+        let zcmd .= "--size " . g:cmdline_term_height . " "
     endif
     let zcmd .= " -- " . a:app
 
@@ -356,7 +356,7 @@ function cmdline#SendCmd(...)
                 unlet g:cmdline_tmuxsname[b:cmdline_filetype]
             endif
         elseif g:cmdline_use_zellij && g:cmdline_zellij_pane != ''
-            let zcmd = "zellij write-chars '" . str . "\n' --pane-id " . g:cmdline_zellij_pane
+            let zcmd = "zellij action write-chars '" . str . "\n' --pane-id " . g:cmdline_zellij_pane
             call system(zcmd)
             if v:shell_error
                 echohl WarningMsg
