@@ -182,7 +182,9 @@ function cmdline#Start_Zellij(app)
     " Create new pane and get its ID
     let pane_info = system(zcmd)
     if v:shell_error
-        exe 'echoerr ' . pane_info
+        echohl ErrorMsg
+        echomsg "Failed to create Zellij pane: " . pane_info
+        echohl Normal
         return
     endif
 
