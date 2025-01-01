@@ -202,11 +202,25 @@ function cmdline#Start_Zellij(app)
 
     " After creating the pane, resize it
     if g:cmdline_vsplit && g:cmdline_term_width != -1
-        let resize_cmd = "zellij action resize left " . (winwidth(0) - g:cmdline_term_width)
-        call system(resize_cmd)
-    elseif !g:cmdline_vsplit
-        let resize_cmd = "zellij action resize up " . (winheight(0) - g:cmdline_term_height)
-        call system(resize_cmd)
+        " Calculate how many times we need to resize to achieve desired width
+        let current_width = winwidth(0)
+        let target_width = g:cmdline_term_width
+        let resize_amount = (current_width - target_width) / 2
+
+        if resize_amount > 0
+            let resize_cmd = "zellij action resize decrease-horizontal " . resize_amount
+            call system(resize_cmd)
+        endif
+    elseif !g:cmdline_vsplit && g:cmdline_term_height != -1
+        " Calculate how many times we need to resize to achieve desired height
+        let current_height = winheight(0)
+        let target_height = g:cmdline_term_height
+        let resize_amount = (current_height - target_height) / 2
+
+        if resize_amount > 0
+            let resize_cmd = "zellij action resize decrease-vertical " . resize_amount
+            call system(resize_cmd)
+        endif
     endif
 
     " Store that we created a pane
