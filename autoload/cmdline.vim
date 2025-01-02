@@ -45,6 +45,10 @@ function cmdline#Init()
     let g:cmdline_tmuxsname = {}
     let s:cmdline_app_pane = ''
 
+    " Zellij specific variables and configuration option
+    let g:cmdline_zellij_pane = 0
+    let g:cmdline_use_zellij = get(g:, 'cmdline_use_zellij', 0)
+
     autocmd VimLeave * call cmdline#Leave()
 
     " Default mappings
@@ -151,6 +155,62 @@ function cmdline#Start_ExTerm(app)
                 \ 'tmux -2 -f "' . tconf . '" -L VimCmdLine new-session -s ' .
                 \ g:cmdline_tmuxsname[b:cmdline_filetype] . ' ' . a:app)
     call system(cmd)
+endfunction
+
+function cmdline#Start_Zellij(app)
+    " Check if Zellij is running
+    if $ZELLIJ == ""
+        echohl WarningMsg
+        echomsg "Cannot start interpreter because not inside a Zellij session."
+        echohl Normal
+        return
+    endif
+
+    " Create a wrapper script to preserve environment
+    let wrapper_script = g:cmdline_tmp_dir . '/env_wrapper_' . getpid() . '.sh'
+    let env_dump = []
+
+    " Dump current environment variables to the wrapper script
+    for [key, val] in items(environ())
+        let escaped_val = substitute(val, "'", "'\\\\''", "g")
+        call add(env_dump, "export " . key . "='" . escaped_val . "'")
+    endfor
+
+    " Run Zellij with the wrapper script
+    call add(env_dump, "exec " . a:app)
+    call writefile(env_dump, wrapper_script)
+    call system('chmod +x ' . wrapper_script)
+
+    let zcmd = "zellij action new-pane "
+    if g:cmdline_vsplit
+        let zcmd .= "-d right "
+    else
+        let zcmd .= "-d down "
+    endif
+    let zcmd .= " -- " . wrapper_script
+
+    " Create new pane
+    call system(zcmd)
+    if v:shell_error
+        echohl ErrorMsg
+        echomsg "Failed to create Zellij pane."
+        echohl Normal
+        call delete(wrapper_script)
+        return
+    endif
+
+    " Refocus nvim after creating the new pane
+    let focus_nvim = "zellij action focus-previous-pane"
+    call system(focus_nvim)
+    if v:shell_error
+        echohl ErrorMsg
+        echomsg "ERROR: Focus command failed with error: " . v:shell_error
+        echohl Normal
+        return
+    endif
+
+    " Store that we created a pane
+    let g:cmdline_zellij_pane = 1
 endfunction
 
 " Run the interpreter in a Tmux panel
@@ -276,6 +336,8 @@ function cmdline#StartApp()
     else
         if g:cmdline_in_buffer
             call cmdline#Start_Nvim(b:cmdline_app, lng)
+        elseif g:cmdline_use_zellij
+            call cmdline#Start_Zellij(b:cmdline_app)
         else
             call cmdline#Start_Tmux(b:cmdline_app)
         endif
@@ -314,6 +376,40 @@ function cmdline#SendCmd(...)
                 echomsg 'Failed to send command. Is "' . b:cmdline_app . '" running?'
                 echohl Normal
                 unlet g:cmdline_tmuxsname[b:cmdline_filetype]
+            endif
+        elseif g:cmdline_use_zellij && g:cmdline_zellij_pane
+            " For Zellij, we need to focus the next pane and write the command
+            let focus_cmd = "zellij action focus-next-pane"
+            call system(focus_cmd)
+            if v:shell_error
+                echohl ErrorMsg
+                echomsg "ERROR: Focus command failed with error: " . v:shell_error
+                echohl Normal
+                return
+            endif
+
+            " Write characters to the focused pane
+            let write_cmd = "zellij action write-chars '" . str . "'"
+            call system(write_cmd)
+            if v:shell_error
+                echohl ErrorMsg
+                echomsg "ERROR: Write command failed with error: " . v:shell_error
+                echohl Normal
+                return
+            endif
+
+            " Send the enter key separately
+            let enter_cmd = "zellij action write-chars '\n'"
+            call system(enter_cmd)
+
+            " Return focus to vim pane
+            let return_focus_cmd = "zellij action focus-previous-pane"
+            call system(return_focus_cmd)
+            if v:shell_error
+                echohl ErrorMsg
+                echomsg "ERROR: Return focus command failed with error: " . v:shell_error
+                echohl Normal
+                return
             endif
         elseif s:cmdline_app_pane != ''
             let scmd = "tmux set-buffer '" . str . "\<C-M>' && tmux paste-buffer -t " . s:cmdline_app_pane
@@ -491,6 +587,7 @@ function cmdline#Quit(ftype)
             let g:cmdline_termbuf[a:ftype] = ""
         endif
         let g:cmdline_tmuxsname[a:ftype] = ""
+        let g:cmdline_zellij_pane = 0
         let s:cmdline_app_pane = ''
     else
         echomsg 'Quit command not defined for file of type "' . a:ftype . '".'

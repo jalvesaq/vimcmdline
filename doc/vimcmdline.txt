@@ -28,11 +28,11 @@ Author: Jakson A. Aquino <jalvesaq@gmail.com>
 
 This plugin sends lines from either Vim or Neovim to a command line
 interpreter (REPL application). The interpreter runs in either Neovim or Vim
-built-in terminal. If Tmux is installed, the interpreter can also run in an
-external terminal emulator or in a tmux pane. If running in either a Neovim
-built-in terminal or an external terminal, the plugin runs one instance of the
-REPL application for each file type. If running in a tmux pane, it runs one
-REPL application for Vim instance.
+built-in terminal. If Tmux or Zellij is installed, the interpreter can also run
+in an external terminal emulator (tmux-only feature) or in a tmux/zellij pane.
+If running in either a Neovim built-in terminal or an external terminal, the
+plugin runs one instance of the REPL application for each file type. If running
+in a tmux or zellij pane, it runs one REPL application for Vim instance.
 
 
 ==============================================================================
@@ -188,10 +188,19 @@ the interpreter, put in your |vimrc|:
 <
 							   *cmdline_in_buffer*
 If you are running Neovim, the interpreter will be started in its built-in
-terminal. If you prefer to start it in a Tmux split pane, put in your |vimrc|:
+terminal. If you prefer to start it in a Tmux or Zellij split pane, put in your
+|vimrc|:
 >
  let cmdline_in_buffer = 0
 <
+							   *cmdline_use_zellij*
+By default, when not using the built-in terminal, vimcmdline will use Tmux for
+splitting panes. If you prefer to use Zellij instead, put in your |vimrc|:
+>
+ let cmdline_use_zellij = 1
+<
+Note: This option requires that you are already running inside a Zellij session
+($ZELLIJ environment variable must be set).
 							 *cmdline_term_height*
 The terminal height will be 15 lines, but you can change it in your |vimrc|:
 >
