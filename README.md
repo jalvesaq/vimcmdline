@@ -75,14 +75,14 @@ for further instructions.
 
 ## See also
 
-Plugins with similar functionality are [toggleterm.nvim], [vim-slime],
-[neoterm], [sniprun], and [conjure].
+Similar plugins are [toggleterm.nvim], [iron.nvim], [vim-slime],
+[sniprun], and [conjure].
 
 [Vim]: http://www.vim.org
 [Neovim]: https://github.com/neovim/neovim
-[vim-slime]: https://github.com/jpalardy/vim-slime
-[neoterm]: https://github.com/kassio/neoterm
 [Nvim-R]: https://github.com/jalvesaq/Nvim-R
+[toggleterm.nvim]: https://github.com/akinsho/toggleterm.nvim
+[iron.nvim]: https://github.com/Vigemus/iron.nvim
+[vim-slime]: https://github.com/jpalardy/vim-slime
 [sniprun]: https://github.com/michaelb/sniprun
 [conjure]: https://github.com/Olical/conjure
-[toggleterm.nvim]: https://github.com/akinsho/toggleterm.nvim
