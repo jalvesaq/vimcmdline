@@ -5,7 +5,7 @@ interpreter (REPL application). There is support for
 Clojure, Golang, Haskell, JavaScript, Julia, Jupyter, Kotlin, Lisp,
 Lua, Macaulay2, Matlab, Prolog, Python, R, Racket, Ruby, Sage,
 Scala, Shell script, Swift, Kdb/q and TypeScript
-(see [Nvim-R] for a more compreehsive support for R in Vim/Neovim).
+(see [R.nvim] for a more compreehsive support for R in Neovim).
 If the file type is `quarto`, `vimcmdline` will try to infer what interpreter
 should be started.
 
@@ -75,14 +75,16 @@ for further instructions.
 
 ## See also
 
-Similar plugins are [toggleterm.nvim], [iron.nvim], [vim-slime],
-[sniprun], and [conjure].
+Similar plugins are [toggleterm.nvim], [iron.nvim], [vim-slime], [neoterm],
+[sniprun], [conjure], and [yarepl.nvim].
 
 [Vim]: http://www.vim.org
 [Neovim]: https://github.com/neovim/neovim
-[Nvim-R]: https://github.com/jalvesaq/Nvim-R
+[R.nvim]: https://github.com/R-nvim/R.nvim
 [toggleterm.nvim]: https://github.com/akinsho/toggleterm.nvim
 [iron.nvim]: https://github.com/Vigemus/iron.nvim
 [vim-slime]: https://github.com/jpalardy/vim-slime
+[neoterm]: https://github.com/kassio/neoterm
 [sniprun]: https://github.com/michaelb/sniprun
 [conjure]: https://github.com/Olical/conjure
+[yarepl.nvim]: https://github.com/milanglacier/yarepl.nvim
